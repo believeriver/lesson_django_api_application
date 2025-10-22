@@ -4,7 +4,9 @@ lesson
 db.sqlite3
 config/__pycache__
 api/__pycache__
-api_insta/__pycache__
 api_auth/__pycache__
+api_auth/migrations/__pycache__
+api_insta/__pycache__
+api_insta/migrations/__pycache__
 api_tasks/__pycache__
 api_household/__pycache__

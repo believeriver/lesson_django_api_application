@@ -3,6 +3,13 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.conf import settings
 
 
+def upload_avatar_path(instance, filename):
+    ext = filename.split('.')[-1]
+    return '/'.join(
+        ['avatars',
+         str(instance.userProfile.id)+str(instance.nickName)+str(".")+str(ext)])
+
+
 class UserManager(BaseUserManager):
     """Create Custom UserModel"""
     def create_user(self, email, password=None):
@@ -28,6 +35,14 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Profile(models.Model):
-    pass
+    nickName = models.CharField(max_length=100)
+    userProfile = models.OneToOneField(
+        settings.AUTH_USER_MODEL, related_name='userProfile',
+        on_delete=models.CASCADE)
+    created_on = models.DateTimeField(auto_now_add=True)
+    img = models.ImageField(
+        blank=True,null=True, upload_to=upload_avatar_path)
 
+    def __str__(self):
+        return self.nickName
 
