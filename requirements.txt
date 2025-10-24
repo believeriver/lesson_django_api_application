@@ -8,6 +8,7 @@ djangorestframework==3.10.0
 djangorestframework-simplejwt==4.6.0
 djoser==2.0.3
 idna==3.11
+pillow==10.4.0
 PyJWT==2.0.0
 pytz==2025.2
 requests==2.32.4
