@@ -52,6 +52,7 @@ const Auth: React.FC = () => {
 
   return (
     <>
+      {/* ユーザ登録 */}
       <Modal
         isOpen={openSingUp}
         onRequestClose={async () => {
@@ -82,7 +83,7 @@ const Auth: React.FC = () => {
             email: Yup.string()
               .email('email format is wrong')
               .required('email is required.'),
-            password: Yup.string().required('password is required').min(8),
+            password: Yup.string().required('password is required').min(4),
           })}
         >
           {({
@@ -154,6 +155,108 @@ const Auth: React.FC = () => {
               </form>
             </div>
           )}
+        </Formik>
+      </Modal>
+
+      {/* ログイン */}
+      <Modal
+        isOpen={openSignIn}
+        onRequestClose={async () => {
+          await dispatch(resetOpenSignIn());
+        }}
+        style={customStyles}
+      >
+        <Formik
+          initialErrors={{ email: 'required' }}
+          initialValues={{ email: '', password: '' }}
+          onSubmit={async (values: AuthProps) => {
+            await dispatch(fetchCredStart());
+            const result = await dispatch(fetchAsyncLogin(values));
+            if (fetchAsyncLogin.fulfilled.match(result)) {
+              await dispatch(fetchAsyncGetProfs());
+              // dispatch(fetchAsyncGetPosts())
+              // dispatch(fetchAsyncGetComments())
+              await dispatch(fetchAsyncGetMyProf());
+            }
+            await dispatch(fetchCredEnd());
+            await dispatch(resetOpenSignIn());
+          }}
+          validationSchema={Yup.object().shape({
+            email: Yup.string()
+              .email('email format is wrong')
+              .required('email is required.'),
+            password: Yup.string().required('password is required').min(4),
+          })}
+        >
+          {({
+            handleSubmit,
+            handleChange,
+            handleBlur,
+            values,
+            errors,
+            touched,
+            isValid,
+          }) => (
+          <div>
+            <form onSubmit={handleSubmit}>
+              <div className={styles.auth_signUp}>
+                <h1 className={styles.auth_title}>SNS clone</h1>
+                <br />
+                <div className={styles.auth_progress}>
+                  {isLoadingAuth && <CircularProgress />}
+                </div>
+                <br />
+
+                <TextField 
+                  placeholder='email'
+                  type='input'
+                  name='email'
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.email}
+                />
+                {touched.email && errors.email ? (
+                  <div className={styles.auth_error}>{errors.email}</div>
+                ): null}
+                <br />
+
+                <TextField 
+                  placeholder='password'
+                  type='password'
+                  name='password'
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.password}
+                />
+                {touched.password && errors.password ? (
+                  <div className={styles.auth_error}>{errors.password}</div>
+                ): null}
+                <br />
+                <br />
+
+                <Button
+                    variant="contained"
+                    color="primary"
+                    disabled={!isValid}
+                    type="submit"
+                  >
+                    Login
+                  </Button>
+                  <br />
+                  <br />
+                  <span
+                    className={styles.auth_text}
+                    onClick={async () => {
+                      await dispatch(setOpenSignUp());
+                      await dispatch(resetOpenSignIn());
+                    }}
+                  >
+                    You don't have an account ?
+                  </span>
+              </div>
+            </form>
+          </div>)}
+
         </Formik>
       </Modal>
     </>
