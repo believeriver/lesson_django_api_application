@@ -5,7 +5,7 @@ export interface File extends Blob {
 }
 
 // authSlice.ts
-export interface AuthenticationProps {
+export interface AuthProps {
   email: string;
   password: string;
 }
