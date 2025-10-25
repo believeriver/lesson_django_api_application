@@ -92,7 +92,7 @@ export const fetchAsyncGetMyProf = createAsyncThunk('profile/get', async () => {
         Authorization: `JWT ${token}`,
       },
     });
-    return res.data[0]
+    return res.data[0];
   } catch (err: any) {
     console.log('[ERROR]: fetchAsyncGetMyProf: ', err.message);
     alert(`[ERROR]: fetchAsyncGetMyProf: ${err.message}`);
@@ -106,7 +106,7 @@ export const fetchAsyncGetProfs = createAsyncThunk('profiles/get', async () => {
         Authorization: `JWT ${token}`,
       },
     });
-    return res.data
+    return res.data;
   } catch (err: any) {
     console.log('[ERROR]: fetchAsyncGetProfs: ', err.message);
     alert(`[ERROR]: fetchAsyncGetProfs: ${err.message}`);
@@ -167,6 +167,26 @@ export const authSlice = createSlice({
       state.myprofile.nickName = action.payload;
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(fetchAsyncLogin.fulfilled, (state, action) => {
+      localStorage.setItem('localJWT', action.payload.access);
+    });
+    builder.addCase(fetchAsyncCreateProf.fulfilled, (state, action) => {
+      state.myprofile = action.payload;
+    });
+    builder.addCase(fetchAsyncGetMyProf.fulfilled, (state, action) => {
+      state.myprofile = action.payload;
+    });
+    builder.addCase(fetchAsyncGetProfs.fulfilled, (state, action) => {
+      state.profiles = action.payload;
+    });
+    builder.addCase(fetchAsyncUpdateProf.fulfilled, (state, action) => {
+      state.myprofile = action.payload;
+      state.profiles = state.profiles.map((prof) => {
+        return prof.id === action.payload.id ? action.payload : prof;
+      });
+    });
+  },
 });
 
 //export reducer.
@@ -182,6 +202,14 @@ export const {
   editNickname,
 } = authSlice.actions;
 
-// export state
+// export state for useSelector
+export const selectIsLoadingAuth = (state: RootState) =>
+  state.auth.isLoadingAuth;
+export const selectOpenSignIn = (state: RootState) => state.auth.openSignIn;
+export const selectOpenSignUp = (state: RootState) => state.auth.openSignUp
+export const selectOpenProfile = (state: RootState) => state.auth.openProfile
+export const selectMyProfile = (state: RootState) => state.auth.myprofile
+export const selectProfiles = (state: RootState) => state.auth.profiles
 
+// export reducer
 export default authSlice.reducer;
