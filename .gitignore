@@ -12,3 +12,4 @@ api_tasks/__pycache__
 api_household/__pycache__
 media/avatars
 media/posts
+frontend_react/node_modules
