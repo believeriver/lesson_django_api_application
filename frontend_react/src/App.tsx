@@ -1,13 +1,12 @@
-
-import styles from './App.module.css'
+import styles from './App.module.css';
+import Core from './features/core/Core';
 
 function App() {
-
   return (
     <div className={styles.app}>
-      App.tsx
+      <Core />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

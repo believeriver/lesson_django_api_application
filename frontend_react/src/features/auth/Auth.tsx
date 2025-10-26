@@ -36,7 +36,7 @@ const customStyles = {
     left: '50%',
 
     width: 280,
-    height: 350,
+    height: 400,
     padding: '50px',
 
     transform: 'translate(-50%, -50%)',
@@ -125,11 +125,9 @@ const Auth: React.FC = () => {
                     onBlur={handleBlur}
                     value={values.password}
                   />
-                  <br />
                   {touched.password && errors.password ? (
                     <div className={styles.auth_error}>{errors.password}</div>
                   ) : null}
-                  <br />
                   <br />
 
                   <Button
@@ -231,7 +229,6 @@ const Auth: React.FC = () => {
                 {touched.password && errors.password ? (
                   <div className={styles.auth_error}>{errors.password}</div>
                 ): null}
-                <br />
                 <br />
 
                 <Button

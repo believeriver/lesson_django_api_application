@@ -1,7 +1,9 @@
 .auth_title {
   font-family: "Playball", cursive;
+  color: #000;
   font-weight: normal;
   text-align: center;
+  font-size: 2rem;
 }
 .auth_error{
   color: #ff00ff;

@@ -19,6 +19,7 @@ export const fetchAsyncLogin = createAsyncThunk(
       });
       return res.data;
     } catch (err: any) {
+      console.log(`${apiUrl}authen/jwt/create`)
       console.log('[ERROR]: fetchAsyncLogin: ', err.message);
       alert(`[ERROR]: fetchAsyncLogin: ${err.message}`);
     }
@@ -49,11 +50,13 @@ export const fetchAsyncCreateProf = createAsyncThunk(
       const res = await axios.post(`${apiUrl}api_auth/profile/`, nickName, {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `JWT ${token}`,
+          Authorization: `JWT ${localStorage.localJWT}`,
         },
       });
       return res.data;
     } catch (err: any) {
+      console.log('[ERROR] token: ', token)
+      console.log('[ERROR] localStorage.localJWT: ', localStorage.localJWT)
       console.log('[ERROR]: fetchAsyncCreateProf: ', err.message);
       alert(`[ERROR]: fetchAsyncCreateProf: ${err.message}`);
     }
@@ -73,7 +76,7 @@ export const fetchAsyncUpdateProf = createAsyncThunk(
         {
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `JWT ${token}`,
+            Authorization: `JWT ${localStorage.localJWT}`,
           },
         }
       );
@@ -89,7 +92,7 @@ export const fetchAsyncGetMyProf = createAsyncThunk('profile/get', async () => {
   try {
     const res = await axios.get(`${apiUrl}api_auth/myprofile/`, {
       headers: {
-        Authorization: `JWT ${token}`,
+        Authorization: `JWT ${localStorage.localJWT}`,
       },
     });
     return res.data[0];
@@ -103,7 +106,7 @@ export const fetchAsyncGetProfs = createAsyncThunk('profiles/get', async () => {
   try {
     const res = await axios.get(`${apiUrl}api_auth/profile/`, {
       headers: {
-        Authorization: `JWT ${token}`,
+        Authorization: `JWT ${localStorage.localJWT}`,
       },
     });
     return res.data;
