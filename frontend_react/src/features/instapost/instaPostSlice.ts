@@ -4,6 +4,7 @@ import axios from 'axios';
 import type { RootState } from '../../app/store';
 import type {
   AuthProps,
+  InstLikedProps,
   InstNewPostProps,
   nickNameProps,
   ProfileProps,
@@ -48,6 +49,57 @@ export const fetchAsyncNewPost = createAsyncThunk(
   }
 );
 
+export const fetchAsyncPatchLiked = createAsyncThunk(
+  'post/patch',
+  async (liked: InstLikedProps) => {
+    try {
+      const currentLiked = liked.current;
+      const uploadData = new FormData();
+
+      let isOverLapped = false;
+      currentLiked.forEach((current) => {
+        if (current === liked.new) {
+          isOverLapped = true;
+        } else {
+          uploadData.append('liked', String(current));
+        }
+      });
+
+      if (!isOverLapped) {
+        uploadData.append('liked', String(liked.new));
+      } else if (currentLiked.length === 1) {
+        uploadData.append('title', liked.title);
+        const res = await axios.put(
+          `${apiUrlInstaPost}${liked.id}/`,
+          uploadData,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `JWT ${localStorage.localJWT}`,
+            },
+          }
+        );
+        return res.data;
+      }
+
+      // isOverlapped===true and currentLiked.length !== 1
+      const res = await axios.patch(
+        `${apiUrlInstaPost}${liked.id}/`,
+        uploadData,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `JWT ${localStorage.localJWT}`,
+          },
+        }
+      );
+      return res.data;
+    } catch (err: any) {
+      console.log('[ERROR]: fetchAsyncPatchLiked: ', err.message);
+      alert(`[ERROR]: fetchAsyncPatchLiked: ${err.message}`);
+    }
+  }
+);
 // main -------------------------------
 export const instaPostSlice = createSlice({
   name: 'instaPost',
