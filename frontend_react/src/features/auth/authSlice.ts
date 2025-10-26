@@ -5,7 +5,7 @@ import type { RootState } from '../../app/store';
 import type { AuthProps, nickNameProps, ProfileProps } from '../types';
 
 const apiUrl = import.meta.env.VITE_API_URL;
-const token = localStorage.localJWT;
+// const token = localStorage.localJWT;
 
 //API function ------------
 export const fetchAsyncLogin = createAsyncThunk(
@@ -55,7 +55,7 @@ export const fetchAsyncCreateProf = createAsyncThunk(
       });
       return res.data;
     } catch (err: any) {
-      console.log('[ERROR] token: ', token)
+      // console.log('[ERROR] token: ', token)
       console.log('[ERROR] localStorage.localJWT: ', localStorage.localJWT)
       console.log('[ERROR]: fetchAsyncCreateProf: ', err.message);
       alert(`[ERROR]: fetchAsyncCreateProf: ${err.message}`);
