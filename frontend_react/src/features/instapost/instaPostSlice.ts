@@ -43,6 +43,7 @@ export const fetchAsyncNewPost = createAsyncThunk(
           Authorization: `JWT ${localStorage.localJWT}`,
         },
       });
+      return res.data;
     } catch (err: any) {
       console.log('[ERROR]: fetchAsyncNewPost: ', err.message);
       alert(`[ERROR]: fetchAsyncNewPost: ${err.message}`);
@@ -174,5 +175,19 @@ export const instaPostSlice = createSlice({
     resetOpenNewPost(state) {
       state.openNewPost = false;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(fetchAsyncGetPosts.fulfilled, (state, action) => {
+      return {
+        ...state,
+        posts: action.payload,
+      };
+    });
+    builder.addCase(fetchAsyncNewPost.fulfilled, (state, action) => {
+      return {
+        ...state,
+        posts: [...state.posts, action.payload],
+      };
+    });
   },
 });
