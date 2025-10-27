@@ -4,6 +4,7 @@ import axios from 'axios';
 import type { RootState } from '../../app/store';
 import type {
   AuthProps,
+  InstCommentProps,
   InstLikedProps,
   InstNewPostProps,
   nickNameProps,
@@ -100,6 +101,41 @@ export const fetchAsyncPatchLiked = createAsyncThunk(
     }
   }
 );
+
+export const fetchAsyncGetComments = createAsyncThunk(
+  'comment/get',
+  async () => {
+    try {
+      const res = await axios.get(apiUrlInstaComment, {
+        headers: {
+          Authorization: `JWT ${localStorage.localJWT}`,
+        },
+      });
+      return res.data;
+    } catch (err: any) {
+      console.log('[ERROR]: fetchAsyncGetComments: ', err.message);
+      alert(`[ERROR]: fetchAsyncGetComments: ${err.message}`);
+    }
+  }
+);
+
+export const fetchAsyncPostComment = createAsyncThunk(
+  'comment/post',
+  async (comment: InstCommentProps) => {
+    try {
+      const res = await axios.post(apiUrlInstaComment, comment, {
+        headers: {
+          Authorization: `JWT ${localStorage.localJWT}`,
+        },
+      });
+      return res.data;
+    } catch (err: any) {
+      console.log('[ERROR]: fetchAsyncPostComments: ', err.message);
+      alert(`[ERROR]: fetchAsyncPostComments: ${err.message}`);
+    }
+  }
+);
+
 // main -------------------------------
 export const instaPostSlice = createSlice({
   name: 'instaPost',
