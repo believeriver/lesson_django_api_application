@@ -189,5 +189,42 @@ export const instaPostSlice = createSlice({
         posts: [...state.posts, action.payload],
       };
     });
+    builder.addCase(fetchAsyncGetComments.fulfilled, (state, action) => {
+      return {
+        ...state,
+        comments: action.payload,
+      };
+    });
+    builder.addCase(fetchAsyncPostComment.fulfilled, (state, action) => {
+      return {
+        ...state,
+        comments: [...state.comments, action.payload],
+      };
+    });
+    builder.addCase(fetchAsyncPatchLiked.fulfilled, (state, action) => {
+      return {
+        ...state,
+        posts: state.posts.map((post) =>
+          post.id === action.payload.id ? action.payload : post
+        ),
+      };
+    });
   },
 });
+
+export const {
+  fetchPostStart,
+  fetchPostEnd,
+  setOpenNewPost,
+  resetOpenNewPost,
+} = instaPostSlice.actions;
+
+// export state for useSelector
+export const selectIsLoadingPost = (state: RootState) =>
+  state.instaPost.isLoadingPost;
+export const selectOpenNewPost = (state: RootState) =>
+  state.instaPost.openNewPost;
+export const selectPosts = (state: RootState) => state.instaPost.posts;
+export const selectComments = (state: RootState) => state.instaPost.comments;
+
+export default instaPostSlice.reducer;
