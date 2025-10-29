@@ -21,7 +21,7 @@ export const fetchAsyncLogin = createAsyncThunk(
     } catch (err: any) {
       console.log(`${apiUrl}authen/jwt/create`)
       console.log('[ERROR]: fetchAsyncLogin: ', err.message);
-      alert(`[ERROR]: fetchAsyncLogin: ${err.message}`);
+      // alert(`[ERROR]: fetchAsyncLogin: ${err.message}`);
     }
   }
 );
@@ -38,7 +38,7 @@ export const fetchAsyncRegister = createAsyncThunk(
       return res.data;
     } catch (err: any) {
       console.log('[ERROR]: fetchAsyncRegister: ', err.message);
-      alert(`[ERROR]: fetchAsyncRegister: ${err.message}`);
+      // alert(`[ERROR]: fetchAsyncRegister: ${err.message}`);
     }
   }
 );
@@ -58,7 +58,7 @@ export const fetchAsyncCreateProf = createAsyncThunk(
       // console.log('[ERROR] token: ', token)
       console.log('[ERROR] localStorage.localJWT: ', localStorage.localJWT)
       console.log('[ERROR]: fetchAsyncCreateProf: ', err.message);
-      alert(`[ERROR]: fetchAsyncCreateProf: ${err.message}`);
+      // alert(`[ERROR]: fetchAsyncCreateProf: ${err.message}`);
     }
   }
 );
@@ -83,7 +83,7 @@ export const fetchAsyncUpdateProf = createAsyncThunk(
       return res.data;
     } catch (err: any) {
       console.log('[ERROR]: fetchAsyncUpdateProf: ', err.message);
-      alert(`[ERROR]: fetchAsyncUpdateProf: ${err.message}`);
+      // alert(`[ERROR]: fetchAsyncUpdateProf: ${err.message}`);
     }
   }
 );
@@ -98,7 +98,7 @@ export const fetchAsyncGetMyProf = createAsyncThunk('profile/get', async () => {
     return res.data[0];
   } catch (err: any) {
     console.log('[ERROR]: fetchAsyncGetMyProf: ', err.message);
-    alert(`[ERROR]: fetchAsyncGetMyProf: ${err.message}`);
+    // alert(`[ERROR]: fetchAsyncGetMyProf: ${err.message}`);
   }
 });
 
@@ -112,7 +112,7 @@ export const fetchAsyncGetProfs = createAsyncThunk('profiles/get', async () => {
     return res.data;
   } catch (err: any) {
     console.log('[ERROR]: fetchAsyncGetProfs: ', err.message);
-    alert(`[ERROR]: fetchAsyncGetProfs: ${err.message}`);
+    // alert(`[ERROR]: fetchAsyncGetProfs: ${err.message}`);
   }
 });
 

@@ -31,6 +31,7 @@ import {
   resetOpenProfile,
   fetchAsyncGetMyProf,
   fetchAsyncGetProfs,
+  selectMyProfile,
 } from '../auth/authSlice';
 
 import {
@@ -78,7 +79,7 @@ const Core: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
   //useSelect
   // storeから必要なデータを取り出すuseSelector
-  const profile = useSelector(selectProfiles);
+  const profile = useSelector(selectMyProfile);
   const posts = useSelector(selectPosts);
   const isLoadingPost = useSelector(selectIsLoadingPost);
   const isLoadingAuth = useSelector(selectIsLoadingAuth);
@@ -109,6 +110,35 @@ const Core: React.FC = () => {
       <Auth />
       <div className={styles.core_header}>
         <h1 className={styles.core_title}>SNS clone</h1>
+        {profile?.nickName ? (
+          <>
+            <button
+              className={styles.core_btnModal}
+              onClick={() => {
+                dispatch(setOpenNewPost());
+                dispatch(resetOpenProfile());
+              }}
+            >
+              <MdAddAPhoto />
+            </button>
+            <div className={styles.core_logout}>
+              {(isLoadingPost || isLoadingAuth) && <CircularProgress />}
+              <Button
+                onClick={() => {
+                  localStorage.removeItem('localJWT');
+                  dispatch(editNickname(''));
+                  dispatch(resetOpenProfile());
+                  dispatch(resetOpenNewPost());
+                  dispatch(setOpenSignIn());
+                }}
+              >
+                Logout
+              </Button>
+            </div>
+          </>
+        ) : (
+          <div></div>
+        )}
       </div>
     </div>
   );

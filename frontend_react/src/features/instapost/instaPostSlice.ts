@@ -26,7 +26,7 @@ export const fetchAsyncGetPosts = createAsyncThunk('post/get', async () => {
     return res.data;
   } catch (err: any) {
     console.log('[ERROR]: fetchAsyncGetPosts: ', err.message);
-    alert(`[ERROR]: fetchAsyncGetPosts: ${err.message}`);
+    // alert(`[ERROR]: fetchAsyncGetPosts: ${err.message}`);
   }
 });
 
@@ -46,7 +46,7 @@ export const fetchAsyncNewPost = createAsyncThunk(
       return res.data;
     } catch (err: any) {
       console.log('[ERROR]: fetchAsyncNewPost: ', err.message);
-      alert(`[ERROR]: fetchAsyncNewPost: ${err.message}`);
+      // alert(`[ERROR]: fetchAsyncNewPost: ${err.message}`);
     }
   }
 );
@@ -98,7 +98,7 @@ export const fetchAsyncPatchLiked = createAsyncThunk(
       return res.data;
     } catch (err: any) {
       console.log('[ERROR]: fetchAsyncPatchLiked: ', err.message);
-      alert(`[ERROR]: fetchAsyncPatchLiked: ${err.message}`);
+      // alert(`[ERROR]: fetchAsyncPatchLiked: ${err.message}`);
     }
   }
 );
@@ -115,7 +115,7 @@ export const fetchAsyncGetComments = createAsyncThunk(
       return res.data;
     } catch (err: any) {
       console.log('[ERROR]: fetchAsyncGetComments: ', err.message);
-      alert(`[ERROR]: fetchAsyncGetComments: ${err.message}`);
+      // alert(`[ERROR]: fetchAsyncGetComments: ${err.message}`);
     }
   }
 );
@@ -132,7 +132,7 @@ export const fetchAsyncPostComment = createAsyncThunk(
       return res.data;
     } catch (err: any) {
       console.log('[ERROR]: fetchAsyncPostComments: ', err.message);
-      alert(`[ERROR]: fetchAsyncPostComments: ${err.message}`);
+      // alert(`[ERROR]: fetchAsyncPostComments: ${err.message}`);
     }
   }
 );
