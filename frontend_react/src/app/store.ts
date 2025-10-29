@@ -1,13 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from '../features/auth/authSlice';
-import instaPostReducer from '../features/instapost/instapostSlice'
+import instaPostReducer from '../features/instapost/instaPostSlice';
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
-    instaPost: instaPostReducer
-  }
+    instaPost: instaPostReducer,
+  },
 });
 
-export type RootState = ReturnType<typeof store.getState>
-export type AppDispatch = typeof store.dispatch
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
