@@ -147,6 +147,7 @@ const Core: React.FC = () => {
                   vertical: 'bottom',
                   horizontal: 'right'
                 }}
+                badgeContent={1}
               >
                 <Avatar alt="who?" src={profile.img} />
               </StyledBadge>
