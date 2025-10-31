@@ -19,6 +19,8 @@ import Auth from '../auth/Auth';
 import styles from './Core.module.css';
 import type { AppDispatch } from '../../app/store';
 
+import instaPost from '../instapost/instaPost';
+
 import {
   editNickname,
   selectProfiles,
@@ -112,6 +114,7 @@ const Core: React.FC = () => {
         <h1 className={styles.core_title}>SNS clone</h1>
         {profile?.nickName ? (
           <>
+          {/* ログインに成功したら表示 */}
             <button
               className={styles.core_btnModal}
               onClick={() => {
@@ -147,16 +150,51 @@ const Core: React.FC = () => {
                   vertical: 'bottom',
                   horizontal: 'right'
                 }}
-                badgeContent={1}
+                // badgeContent={1}
+                variant='dot'
               >
                 <Avatar alt="who?" src={profile.img} />
               </StyledBadge>
             </div>
           </>
         ) : (
-          <div></div>
+          <div>
+            {/* ログインしていない時に表示するボタン */}
+            <Button
+              onClick={() => {
+                dispatch(setOpenSignIn())
+                dispatch(resetOpenSignUp())
+              }}
+            >
+              Login
+            </Button>
+            <Button
+              onClick={() => {
+                dispatch(setOpenSignUp())
+                dispatch(resetOpenSignIn())
+              }}
+            >
+              SignUp
+            </Button>
+          </div>
         )}
       </div>
+
+      {/* ログインしている時にポスト一覧を表示する */}
+      {profile?.nickName && <>
+        <div className={styles.core_posts}>
+          <Grid container spacing={4}>
+            {posts
+            .slice(0)
+            .reverse()
+            .map((post) => (
+              <Grid key={post.id} size={{ xs: 12, md: 4 }}>
+                {/* <instaPost /> */}
+              </Grid>
+            ))}
+          </Grid>
+        </div>
+      </>}
     </div>
   );
 };
