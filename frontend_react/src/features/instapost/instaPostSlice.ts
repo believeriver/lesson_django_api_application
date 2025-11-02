@@ -76,7 +76,7 @@ export const fetchAsyncPatchLiked = createAsyncThunk(
           uploadData,
           {
             headers: {
-              'Content-Type': 'application/json',
+              // 'Content-Type': 'application/json',
               Authorization: `JWT ${localStorage.localJWT}`,
             },
           }
@@ -90,7 +90,7 @@ export const fetchAsyncPatchLiked = createAsyncThunk(
         uploadData,
         {
           headers: {
-            'Content-Type': 'application/json',
+            // 'Content-Type': 'application/json',
             Authorization: `JWT ${localStorage.localJWT}`,
           },
         }
