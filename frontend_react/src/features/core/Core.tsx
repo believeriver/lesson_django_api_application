@@ -19,7 +19,7 @@ import Auth from '../auth/Auth';
 import styles from './Core.module.css';
 import type { AppDispatch } from '../../app/store';
 
-import instaPost from '../instapost/instaPost';
+import InstaPost from '../instapost/InstaPost';
 
 import {
   editNickname,
@@ -86,6 +86,8 @@ const Core: React.FC = () => {
   const isLoadingPost = useSelector(selectIsLoadingPost);
   const isLoadingAuth = useSelector(selectIsLoadingAuth);
 
+  console.log('[INFO]: profile in Core.tsx: ', profile)
+
   //useEffect
   // コンポーネントのレンダリング後に実行したい処理
   //API通信、ログ出力、イベント登録・解除などの「副作用（side effect）」を行うとき
@@ -114,7 +116,7 @@ const Core: React.FC = () => {
         <h1 className={styles.core_title}>SNS clone</h1>
         {profile?.nickName ? (
           <>
-          {/* ログインに成功したら表示 */}
+            {/* ログインに成功したら表示 */}
             <button
               className={styles.core_btnModal}
               onClick={() => {
@@ -137,21 +139,21 @@ const Core: React.FC = () => {
               >
                 Logout
               </Button>
-              <button 
+              <button
                 className={styles.core_btnModal}
                 onClick={() => {
-                  dispatch(setOpenProfile())
-                  dispatch(resetOpenNewPost())
+                  dispatch(setOpenProfile());
+                  dispatch(resetOpenNewPost());
                 }}
               />
               <StyledBadge
-                overlap='circular'
+                overlap="circular"
                 anchorOrigin={{
                   vertical: 'bottom',
-                  horizontal: 'right'
+                  horizontal: 'right',
                 }}
                 // badgeContent={1}
-                variant='dot'
+                variant="dot"
               >
                 <Avatar alt="who?" src={profile.img} />
               </StyledBadge>
@@ -162,16 +164,16 @@ const Core: React.FC = () => {
             {/* ログインしていない時に表示するボタン */}
             <Button
               onClick={() => {
-                dispatch(setOpenSignIn())
-                dispatch(resetOpenSignUp())
+                dispatch(setOpenSignIn());
+                dispatch(resetOpenSignUp());
               }}
             >
               Login
             </Button>
             <Button
               onClick={() => {
-                dispatch(setOpenSignUp())
-                dispatch(resetOpenSignIn())
+                dispatch(setOpenSignUp());
+                dispatch(resetOpenSignIn());
               }}
             >
               SignUp
@@ -181,20 +183,29 @@ const Core: React.FC = () => {
       </div>
 
       {/* ログインしている時にポスト一覧を表示する */}
-      {profile?.nickName && <>
-        <div className={styles.core_posts}>
-          <Grid container spacing={4}>
-            {posts
-            .slice(0)
-            .reverse()
-            .map((post) => (
-              <Grid key={post.id} size={{ xs: 12, md: 4 }}>
-                {/* <instaPost /> */}
-              </Grid>
-            ))}
-          </Grid>
-        </div>
-      </>}
+      {profile?.nickName && (
+        <>
+          <div className={styles.core_posts}>
+            <Grid container spacing={4}>
+              {posts
+                .slice(0)
+                .reverse()
+                .map((post) => (
+                  <Grid key={post.id} size={{ xs: 12, md: 4 }}>
+                    {/* <InstaPost
+                      postId={post.id}
+                      title={post.title}
+                      loginId={profile.userProfile}
+                      userPost={post.userPost}
+                      imageUrl={post.img}
+                      liked={post.liked}
+                    /> */}
+                  </Grid>
+                ))}
+            </Grid>
+          </div>
+        </>
+      )}
     </div>
   );
 };

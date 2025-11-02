@@ -24,6 +24,12 @@ import {
   fetchAsyncGetProfs,
   fetchAsyncCreateProf,
 } from './authSlice';
+
+import {
+  fetchAsyncGetPosts,
+  fetchAsyncGetComments,
+} from '../instapost/instaPostSlice';
+
 import type { AuthProps } from '../types';
 
 // Modal style
@@ -72,8 +78,8 @@ const Auth: React.FC = () => {
               await dispatch(fetchAsyncCreateProf({ nickName: 'anonymous' }));
 
               await dispatch(fetchAsyncGetProfs());
-              // await dispatch(fetchAsyncGetPosts())
-              // await dispatch(fetchAsyncGetComments())
+              await dispatch(fetchAsyncGetPosts());
+              await dispatch(fetchAsyncGetComments());
               await dispatch(fetchAsyncGetMyProf());
             }
             await dispatch(fetchCredEnd());
@@ -172,8 +178,8 @@ const Auth: React.FC = () => {
             const result = await dispatch(fetchAsyncLogin(values));
             if (fetchAsyncLogin.fulfilled.match(result)) {
               await dispatch(fetchAsyncGetProfs());
-              // dispatch(fetchAsyncGetPosts())
-              // dispatch(fetchAsyncGetComments())
+              dispatch(fetchAsyncGetPosts());
+              dispatch(fetchAsyncGetComments());
               await dispatch(fetchAsyncGetMyProf());
             }
             await dispatch(fetchCredEnd());
@@ -195,43 +201,43 @@ const Auth: React.FC = () => {
             touched,
             isValid,
           }) => (
-          <div>
-            <form onSubmit={handleSubmit}>
-              <div className={styles.auth_signUp}>
-                <h1 className={styles.auth_title}>SNS clone</h1>
-                <br />
-                <div className={styles.auth_progress}>
-                  {isLoadingAuth && <CircularProgress />}
-                </div>
-                <br />
+            <div>
+              <form onSubmit={handleSubmit}>
+                <div className={styles.auth_signUp}>
+                  <h1 className={styles.auth_title}>SNS clone</h1>
+                  <br />
+                  <div className={styles.auth_progress}>
+                    {isLoadingAuth && <CircularProgress />}
+                  </div>
+                  <br />
 
-                <TextField 
-                  placeholder='email'
-                  type='input'
-                  name='email'
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.email}
-                />
-                {touched.email && errors.email ? (
-                  <div className={styles.auth_error}>{errors.email}</div>
-                ): null}
-                <br />
+                  <TextField
+                    placeholder="email"
+                    type="input"
+                    name="email"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.email}
+                  />
+                  {touched.email && errors.email ? (
+                    <div className={styles.auth_error}>{errors.email}</div>
+                  ) : null}
+                  <br />
 
-                <TextField 
-                  placeholder='password'
-                  type='password'
-                  name='password'
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.password}
-                />
-                {touched.password && errors.password ? (
-                  <div className={styles.auth_error}>{errors.password}</div>
-                ): null}
-                <br />
+                  <TextField
+                    placeholder="password"
+                    type="password"
+                    name="password"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.password}
+                  />
+                  {touched.password && errors.password ? (
+                    <div className={styles.auth_error}>{errors.password}</div>
+                  ) : null}
+                  <br />
 
-                <Button
+                  <Button
                     variant="contained"
                     color="primary"
                     disabled={!isValid}
@@ -250,10 +256,10 @@ const Auth: React.FC = () => {
                   >
                     You don't have an account ?
                   </span>
-              </div>
-            </form>
-          </div>)}
-
+                </div>
+              </form>
+            </div>
+          )}
         </Formik>
       </Modal>
     </>
