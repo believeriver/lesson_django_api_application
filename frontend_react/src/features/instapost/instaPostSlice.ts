@@ -39,7 +39,7 @@ export const fetchAsyncNewPost = createAsyncThunk(
       newPost.img && uploadData.append('img', newPost.img, newPost.img.name);
       const res = await axios.post(apiUrlInstaPost, uploadData, {
         headers: {
-          'Content-Type': 'application/json',
+          // 'Content-Type': 'application/json',
           Authorization: `JWT ${localStorage.localJWT}`,
         },
       });
