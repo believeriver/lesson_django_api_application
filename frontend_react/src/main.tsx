@@ -7,6 +7,7 @@ import { store } from './app/store.ts';
 import './index.css';
 import App from './App.tsx';
 import Menu from './features/front/Menu.tsx';
+import HouseholdMain from './features/household/HouseholdMain.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -15,6 +16,7 @@ createRoot(document.getElementById('root')!).render(
         <Routes>
           <Route path="/" element={<Menu />} />
           <Route path="/insta_clone" element={<App />} />
+          <Route path="/household" element={<HouseholdMain />} />
         </Routes>
       </BrowserRouter>
     </Provider>
