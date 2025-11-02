@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'djoser',
     'api_auth.apps.ApiAuthConfig',
     'api_insta.apps.ApiInstaConfig',
+    'api_household.apps.ApiHouseholdConfig',
 ]
 
 MIDDLEWARE = [
