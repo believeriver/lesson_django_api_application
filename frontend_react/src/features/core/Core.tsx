@@ -192,14 +192,14 @@ const Core: React.FC = () => {
                 .reverse()
                 .map((post) => (
                   <Grid key={post.id} size={{ xs: 12, md: 4 }}>
-                    {/* <InstaPost
+                    <InstaPost
                       postId={post.id}
                       title={post.title}
                       loginId={profile.userProfile}
                       userPost={post.userPost}
                       imageUrl={post.img}
                       liked={post.liked}
-                    /> */}
+                    />
                   </Grid>
                 ))}
             </Grid>

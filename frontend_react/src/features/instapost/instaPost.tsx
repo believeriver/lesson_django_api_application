@@ -31,13 +31,13 @@ import { current } from '@reduxjs/toolkit';
 //     },
 //   })
 // );
-const useStyles = makeStyles((theme: any) => ({
-  small: {
-    width: theme.spacing(3),
-    height: theme.spacing(3),
-    marginRight: theme.spacing(1),
-  },
-}));
+// const useStyles = makeStyles((theme: any) => ({
+//   small: {
+//     width: theme.spacing(3),
+//     height: theme.spacing(3),
+//     marginRight: theme.spacing(1),
+//   },
+// }));
 
 const InstaPost: React.FC<InstPostProps> = ({
   postId,
@@ -47,7 +47,7 @@ const InstaPost: React.FC<InstPostProps> = ({
   imageUrl,
   liked,
 }) => {
-  const classes = useStyles();
+  // const classes = useStyles();
   const dispatch: AppDispatch = useDispatch();
   const profiles = useSelector(selectProfiles);
   const comments = useSelector(selectComments);
@@ -126,7 +126,11 @@ const InstaPost: React.FC<InstPostProps> = ({
                     (prof) => prof.userProfile === comment.userComment
                   )?.img
                 }
-                className={classes.small}
+                sx={{
+                  width: 24, // px単位で直接指定OK
+                  height: 24,
+                }}
+                // className={classes.small}
               />
               <p>
                 <strong className={styles.post_strong}>
@@ -144,10 +148,10 @@ const InstaPost: React.FC<InstPostProps> = ({
 
         {/* 投稿フォーム */}
         <form className={styles.post_commentBox}>
-          <input 
+          <input
             className={styles.post_input}
             type="text"
-            placeholder='add a comment'
+            placeholder="add a comment"
             value={text}
             onChange={(e) => setText(e.target.value)}
           />
