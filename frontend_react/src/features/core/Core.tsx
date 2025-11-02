@@ -44,6 +44,7 @@ import {
   fetchAsyncGetPosts,
   fetchAsyncGetComments,
 } from '../instapost/instaPostSlice';
+import EditProfile from './EditProfile';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
@@ -86,7 +87,7 @@ const Core: React.FC = () => {
   const isLoadingPost = useSelector(selectIsLoadingPost);
   const isLoadingAuth = useSelector(selectIsLoadingAuth);
 
-  console.log('[INFO]: profile in Core.tsx: ', profile)
+  console.log('[INFO]: profile in Core.tsx: ', profile);
 
   //useEffect
   // コンポーネントのレンダリング後に実行したい処理
@@ -112,6 +113,7 @@ const Core: React.FC = () => {
   return (
     <div>
       <Auth />
+      <EditProfile />
       <div className={styles.core_header}>
         <h1 className={styles.core_title}>SNS clone</h1>
         {profile?.nickName ? (
@@ -145,18 +147,19 @@ const Core: React.FC = () => {
                   dispatch(setOpenProfile());
                   dispatch(resetOpenNewPost());
                 }}
-              />
-              <StyledBadge
-                overlap="circular"
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'right',
-                }}
-                // badgeContent={1}
-                variant="dot"
               >
-                <Avatar alt="who?" src={profile.img} />
-              </StyledBadge>
+                <StyledBadge
+                  overlap="circular"
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                  }}
+                  // badgeContent={1}
+                  variant="dot"
+                >
+                  <Avatar alt="who?" src={profile.img} />
+                </StyledBadge>
+              </button>
             </div>
           </>
         ) : (

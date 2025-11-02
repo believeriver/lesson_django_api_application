@@ -19,7 +19,7 @@ export const fetchAsyncLogin = createAsyncThunk(
       });
       return res.data;
     } catch (err: any) {
-      console.log(`${apiUrl}authen/jwt/create`)
+      console.log(`${apiUrl}authen/jwt/create`);
       console.log('[ERROR]: fetchAsyncLogin: ', err.message);
       // alert(`[ERROR]: fetchAsyncLogin: ${err.message}`);
     }
@@ -56,7 +56,7 @@ export const fetchAsyncCreateProf = createAsyncThunk(
       return res.data;
     } catch (err: any) {
       // console.log('[ERROR] token: ', token)
-      console.log('[ERROR] localStorage.localJWT: ', localStorage.localJWT)
+      console.log('[ERROR] localStorage.localJWT: ', localStorage.localJWT);
       console.log('[ERROR]: fetchAsyncCreateProf: ', err.message);
       // alert(`[ERROR]: fetchAsyncCreateProf: ${err.message}`);
     }
@@ -75,7 +75,7 @@ export const fetchAsyncUpdateProf = createAsyncThunk(
         uploadData,
         {
           headers: {
-            'Content-Type': 'application/json',
+            // 'Content-Type': 'application/json',
             Authorization: `JWT ${localStorage.localJWT}`,
           },
         }
@@ -185,9 +185,13 @@ export const authSlice = createSlice({
     });
     builder.addCase(fetchAsyncUpdateProf.fulfilled, (state, action) => {
       state.myprofile = action.payload;
-      state.profiles = state.profiles.map((prof) => {
-        return prof.id === action.payload.id ? action.payload : prof;
-      });
+      console.log(
+        '[INFO]: fetchAsyncUpdateProf : action.payload:',
+        action.payload
+      );
+      state.profiles = state.profiles.map((prof) =>
+        prof.id === action.payload.id ? action.payload : prof
+      );
     });
   },
 });
@@ -209,10 +213,10 @@ export const {
 export const selectIsLoadingAuth = (state: RootState) =>
   state.auth.isLoadingAuth;
 export const selectOpenSignIn = (state: RootState) => state.auth.openSignIn;
-export const selectOpenSignUp = (state: RootState) => state.auth.openSignUp
-export const selectOpenProfile = (state: RootState) => state.auth.openProfile
-export const selectMyProfile = (state: RootState) => state.auth.myprofile
-export const selectProfiles = (state: RootState) => state.auth.profiles
+export const selectOpenSignUp = (state: RootState) => state.auth.openSignUp;
+export const selectOpenProfile = (state: RootState) => state.auth.openProfile;
+export const selectMyProfile = (state: RootState) => state.auth.myprofile;
+export const selectProfiles = (state: RootState) => state.auth.profiles;
 
 // export reducer
 export default authSlice.reducer;

@@ -119,7 +119,7 @@ const InstaPost: React.FC<InstPostProps> = ({
         {/* コメント */}
         <div className={styles.post_comments}>
           {commentsOnPost.map((comment) => (
-            <div>
+            <div key={comment.id} className={styles.post_comment}>
               <Avatar
                 src={
                   profiles.find(
