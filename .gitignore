@@ -10,6 +10,7 @@ api_insta/__pycache__
 api_insta/migrations/__pycache__
 api_tasks/__pycache__
 api_household/__pycache__
+api_household/migrations/__pycache__/
 media/avatars
 media/posts
 frontend_react/node_modules
