@@ -35,6 +35,13 @@ def fetch_profile(_token: str):
     return response.text
 
 
+def fetch_household_transactions(_token: str):
+    _url = f'{BASE_URL}api_household/transactions/'
+    response = requests.get(
+        _url, headers={'Authorization': f'JWT {token}'})
+    return response.text
+
+
 if __name__ == '__main__':
     email = 'user01@email.com'
     password = 'user01'
@@ -50,11 +57,14 @@ if __name__ == '__main__':
     token = fetch_token(email, password)
     print({'Authorization JWT': token})
 
-    print('profile')
-    print(fetch_profile(''))
-    print(fetch_profile(token))
+    # print('profile')
+    # print(fetch_profile(''))
+    # print(fetch_profile(token))
 
     # print('tasks')
     # print(fetch_tasks(token))
+
+    print('household transactions')
+    print(fetch_household_transactions(token))
 
 

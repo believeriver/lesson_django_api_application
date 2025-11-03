@@ -7,6 +7,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api_auth/', include('api_auth.urls')),
     path('api_insta/', include('api_insta.urls')),
+    path('api_household/', include('api_household.urls')),
     path('authen/', include('djoser.urls.jwt')),
 ]
 
