@@ -1,6 +1,6 @@
 import React from 'react'
 
-const HouseholdMain = () => {
+const HouseholdMain:React.FC = () => {
   return (
     <div>HouseholdMain</div>
   )
