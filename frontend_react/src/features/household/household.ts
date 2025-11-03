@@ -24,3 +24,42 @@ export const fetchAsyncGetHouseholdTransactions = createAsyncThunk(
     }
   }
 );
+
+// main(createSlice) ----
+export const householdSlice = createSlice({
+  name: 'householde',
+  initialState: {
+    isLoadingHousehold: false,
+    transactions: [
+      {
+        id: 0,
+        amount: 0,
+        type: '',
+        date: '',
+        category: '',
+        content: '',
+      },
+    ],
+  },
+  reducers: {
+    fetchHouseholdStart(state) {
+      state.isLoadingHousehold = true;
+    },
+    fetchHouseholdEnd(state) {
+      state.isLoadingHousehold = false;
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(
+      fetchAsyncGetHouseholdTransactions.fulfilled,
+      (state, action) => {
+        return {
+          ...state,
+          transactions: action.payload,
+        };
+      }
+    );
+  },
+});
+
+export default householdSlice.reducer;
