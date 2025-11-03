@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 # Create your models here.
 """
@@ -19,6 +20,11 @@ class HouseHoldTransactions(models.Model):
     date = models.DateField()                                     # '2025-01-01'のフォーマットで扱う日付型
     category = models.CharField(max_length=50)                    # カテゴリ
     content = models.CharField(max_length=255)                    # 内容
+    user_household = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        related_name='user_household',
+        on_delete=models.CASCADE,
+        default=1)
     created_on = models.DateTimeField(auto_now_add=True)          # レコード作成日時（自動設定）
     updated_on = models.DateTimeField(auto_now=True)              # レコード更新日時（自動更新）
 
