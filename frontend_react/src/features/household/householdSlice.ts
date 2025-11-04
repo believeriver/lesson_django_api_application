@@ -30,6 +30,7 @@ export const householdSlice = createSlice({
   name: 'householde',
   initialState: {
     isLoadingHousehold: false,
+    openHousehold: false,
     transactions: [
       {
         id: 0,
@@ -48,6 +49,12 @@ export const householdSlice = createSlice({
     fetchHouseholdEnd(state) {
       state.isLoadingHousehold = false;
     },
+    setOpenHousehold(state) {
+      state.openHousehold = true;
+    },
+    resetOpenHousehold(state) {
+      state.openHousehold = false;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(
@@ -62,4 +69,20 @@ export const householdSlice = createSlice({
   },
 });
 
+export const {
+  fetchHouseholdStart,
+  fetchHouseholdEnd,
+  setOpenHousehold,
+  resetOpenHousehold,
+} = householdSlice.actions;
+
+//export state for useSelector
+export const selectIsLoadingHousehold = (state: RootState) =>
+  state.household.isLoadingHousehold;
+export const selectOpenHousehold = (state: RootState) =>
+  state.household.openHousehold;
+export const selectTransactions = (state: RootState) =>
+  state.household.transactions;
+
+//export householdReducer
 export default householdSlice.reducer;
