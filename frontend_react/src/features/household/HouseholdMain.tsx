@@ -1,9 +1,22 @@
-import React from 'react'
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
-const HouseholdMain:React.FC = () => {
-  return (
-    <div>HouseholdMain</div>
-  )
-}
+import type { AppDispatch } from '../../app/store';
 
-export default HouseholdMain
+import {
+  selectIsLoadingHousehold,
+  fetchAsyncGetHouseholdTransactions,
+  fetchHouseholdStart,
+  fetchHouseholdEnd,
+  selectTransactions,
+} from './householdSlice';
+
+import type { Transaction } from './householdtypes';
+
+const HouseholdMain: React.FC = () => {
+  const dispatch: AppDispatch = useDispatch();
+  const transactions = useSelector(selectTransactions)
+  return <div>HouseholdMain</div>;
+};
+
+export default HouseholdMain;
