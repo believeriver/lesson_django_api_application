@@ -31,7 +31,7 @@ const HouseholdMain: React.FC = () => {
 
   useEffect(() => {
     const fetchHouseholdBootLoader = async () => {
-      //ログイン画面を閉じる>SNS cloneで定義ずみのため、ここでuseSelectorは使わない
+      //ログイン画面を閉じる>Core.tsxで定義ずみのため、ここでuseSelectorは使わない
       // dispatch(resetOpenSignIn());
       if (localStorage.localJWT) {
         const result = await dispatch(fetchAsyncGetMyProf());
