@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import type { AppDispatch } from '../../app/store';
@@ -21,18 +21,22 @@ import {
 
 import type { Transaction } from './householdtypes';
 import Auth from '../auth/Auth';
+import { formatMonth } from '../utils/formatting';
 
 const HouseholdMain: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const transactions = useSelector(selectTransactions);
   const profile = useSelector(selectMyProfile);
-  const isLoadingAuth = useSelector(selectIsLoadingAuth)
-  const isLoadingHousehold = useSelector(selectIsLoadingHousehold)
+  const isLoadingAuth = useSelector(selectIsLoadingAuth);
+  const isLoadingHousehold = useSelector(selectIsLoadingHousehold);
 
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+
+  // DatabaseからTransactionデータを取得
   useEffect(() => {
     const fetchHouseholdBootLoader = async () => {
       //ログイン画面を閉じる>Core.tsxで定義ずみのため、ここでuseSelectorは使わない
-      // dispatch(resetOpenSignIn());
+      dispatch(resetOpenSignIn());
       if (localStorage.localJWT) {
         const result = await dispatch(fetchAsyncGetMyProf());
         if (fetchAsyncGetMyProf.rejected.match(result)) {
@@ -48,14 +52,16 @@ const HouseholdMain: React.FC = () => {
   }, [dispatch]);
   console.log('[INFO] household transactions:', transactions);
 
+  //Transactionデータを１ヶ月でフィルタリングする
+  const monthlyTransactions = transactions.filter((transaction) => {
+    return transaction.date.startsWith(formatMonth(currentMonth));
+  });
+  console.log('[INFO]: monthlyTransactions:', monthlyTransactions);
+
   return (
     <div>
       <Auth />
-      {profile.nickName ? (
-        <p>Success. Household</p>
-      ) : (
-        <p>Login False</p>
-      )}
+      {profile.nickName ? <p>Success. Household</p> : <p>Login False</p>}
     </div>
   );
 };

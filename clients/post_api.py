@@ -31,9 +31,9 @@ if __name__ == '__main__':
     data = {
         "amount": "200.00",
         "type": "expense",
-        "date": "2025-11-03",
+        "date": "2025-10-03",
         "category": "食費",
-        "content": "キャベツ",
+        "content": "お醤油",
         "user_household": 2,
     }
 
