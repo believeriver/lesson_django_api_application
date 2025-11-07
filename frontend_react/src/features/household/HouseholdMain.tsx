@@ -22,6 +22,7 @@ import {
 import type { Transaction } from './householdtypes';
 import Auth from '../auth/Auth';
 import { formatMonth } from '../utils/formatting';
+import Home from './pages/Home'
 
 const HouseholdMain: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -35,12 +36,12 @@ const HouseholdMain: React.FC = () => {
   // DatabaseからTransactionデータを取得
   useEffect(() => {
     const fetchHouseholdBootLoader = async () => {
-      //ログイン画面を閉じる>Core.tsxで定義ずみのため、ここでuseSelectorは使わない
-      dispatch(resetOpenSignIn());
+      //ログイン画面を閉じる
+      // dispatch(resetOpenSignIn());
       if (localStorage.localJWT) {
         const result = await dispatch(fetchAsyncGetMyProf());
         if (fetchAsyncGetMyProf.rejected.match(result)) {
-          //データの取得に失敗したら、ログイン画面に戻る
+          //データの取得に失敗したら、ログイン画面に戻るが、Modalを重複起動になるのでコメントアウト
           // dispatch(setOpenSignIn());
           return null;
         }
@@ -61,7 +62,14 @@ const HouseholdMain: React.FC = () => {
   return (
     <div>
       <Auth />
-      {profile.nickName ? <p>Success. Household</p> : <p>Login False</p>}
+      {profile.nickName ? (
+        <Home
+          monthlyTransactions={monthlyTransactions}
+          setCurrentMonth={setCurrentMonth}
+        />
+      ) : (
+        <p>Login False</p>
+      )}
     </div>
   );
 };
