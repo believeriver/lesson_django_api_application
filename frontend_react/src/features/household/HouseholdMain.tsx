@@ -22,7 +22,7 @@ import {
 import type { Transaction } from './householdtypes';
 import Auth from '../auth/Auth';
 import { formatMonth } from '../utils/formatting';
-import Home from './pages/Home'
+import Home from './pages/Home';
 
 const HouseholdMain: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -48,6 +48,7 @@ const HouseholdMain: React.FC = () => {
         //ログインに成功したら、Transactionデータの取得をする
         await dispatch(fetchAsyncGetHouseholdTransactions());
       }
+      return null;
     };
     fetchHouseholdBootLoader();
   }, [dispatch]);

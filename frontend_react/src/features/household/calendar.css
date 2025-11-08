@@ -1,0 +1,35 @@
+/* aタグ */
+.fc-h-event {
+  background-color: transparent;
+  border: none;
+  text-align: left;
+  pointer-events: none;
+}
+/* カレンダー背景色設定 */
+.fc-daygrid-body,
+.fc-day{
+  background-color: #fff;
+}
+.fc-col-header-cell {
+  background-color: #42a5f5;
+  color: white;
+}
+.fc .fc-daygrid-day-frame {
+  height: 100%;
+  min-height: 100px;
+}
+/* カスタムイベントの見た目 */
+.money{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#event-income {
+  color: #2196f3;
+}
+#event-expense {
+  color: #f44336;
+}
+#event-balance {
+  color: #4caf50;
+}
