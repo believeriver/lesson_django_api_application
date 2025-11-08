@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
 
 import type { AppDispatch } from '../../app/store';
 
@@ -13,8 +12,6 @@ import {
 } from './householdSlice';
 
 import {
-  setOpenSignIn,
-  resetOpenSignIn,
   fetchAsyncGetMyProf,
   selectMyProfile,
   selectIsLoadingAuth,
@@ -24,6 +21,7 @@ import type { Transaction } from './householdtypes';
 import Auth from '../auth/Auth';
 import { formatMonth } from '../utils/formatting';
 import Home from './pages/Home';
+import Navigation from '../front/Navigation'
 
 const HouseholdMain: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -37,13 +35,9 @@ const HouseholdMain: React.FC = () => {
   // DatabaseからTransactionデータを取得
   useEffect(() => {
     const fetchHouseholdBootLoader = async () => {
-      //ログイン画面を閉じる
-      // dispatch(resetOpenSignIn());
       if (localStorage.localJWT) {
         const result = await dispatch(fetchAsyncGetMyProf());
         if (fetchAsyncGetMyProf.rejected.match(result)) {
-          //データの取得に失敗したら、ログイン画面に戻るが、Modalを重複起動になるのでコメントアウト
-          // dispatch(setOpenSignIn());
           return null;
         }
         //ログインに成功したら、Transactionデータの取得をする
@@ -63,6 +57,7 @@ const HouseholdMain: React.FC = () => {
 
   return (
     <div>
+      <Navigation />
       {/* <Auth /> */}
       {profile.nickName ? (
         <Home
