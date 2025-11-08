@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import {
   Button,
@@ -130,6 +131,7 @@ const Core: React.FC = () => {
             >
               <MdAddAPhoto />
             </button>
+            <Link to="/">Menu</Link>
             <div className={styles.core_logout}>
               {(isLoadingPost || isLoadingAuth) && <CircularProgress />}
               <Button
@@ -167,6 +169,7 @@ const Core: React.FC = () => {
         ) : (
           <div>
             {/* ログインしていない時に表示するボタン */}
+            <Link to="/">Menu</Link>
             <Button
               onClick={() => {
                 dispatch(setOpenSignIn());
