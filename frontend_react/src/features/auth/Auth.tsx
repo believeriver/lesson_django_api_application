@@ -76,10 +76,10 @@ const Auth: React.FC = () => {
             if (fetchAsyncRegister.fulfilled.match(resultReg)) {
               await dispatch(fetchAsyncLogin(values));
               await dispatch(fetchAsyncCreateProf({ nickName: 'anonymous' }));
-
-              await dispatch(fetchAsyncGetProfs());
-              await dispatch(fetchAsyncGetPosts());
-              await dispatch(fetchAsyncGetComments());
+              // 2025.11.8 comment out
+              // await dispatch(fetchAsyncGetProfs());
+              // await dispatch(fetchAsyncGetPosts());
+              // await dispatch(fetchAsyncGetComments());
               await dispatch(fetchAsyncGetMyProf());
             }
             await dispatch(fetchCredEnd());
@@ -177,9 +177,10 @@ const Auth: React.FC = () => {
             await dispatch(fetchCredStart());
             const result = await dispatch(fetchAsyncLogin(values));
             if (fetchAsyncLogin.fulfilled.match(result)) {
-              await dispatch(fetchAsyncGetProfs());
-              dispatch(fetchAsyncGetPosts());
-              dispatch(fetchAsyncGetComments());
+              // 2025.11.08
+              // await dispatch(fetchAsyncGetProfs());
+              // await dispatch(fetchAsyncGetPosts());
+              // await dispatch(fetchAsyncGetComments());
               await dispatch(fetchAsyncGetMyProf());
             }
             await dispatch(fetchCredEnd());

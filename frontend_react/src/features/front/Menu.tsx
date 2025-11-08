@@ -27,7 +27,7 @@ const Menu: React.FC = () => {
               sx={{
                 p: 3,
                 textAlign: 'center',
-                bgcolor: 'primary.light',
+                backgroundColor: 'primary.light',
                 cursor: 'pointer',
                 '&:hover': { bgcolor: 'primary.main', color: '#fff' },
                 userSelect: 'none',
