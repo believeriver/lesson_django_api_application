@@ -20,13 +20,6 @@ import NoMatch from './features/household/pages/NoMatch';
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Provider store={store}>
-      {/* <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Menu />} />
-          <Route path="/insta_clone" element={<App />} />
-          <Route path="/household" element={<HouseholdMain />} />
-        </Routes>
-      </BrowserRouter> */}
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Router>
