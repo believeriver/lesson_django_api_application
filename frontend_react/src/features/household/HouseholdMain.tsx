@@ -17,7 +17,6 @@ import {
   selectIsLoadingAuth,
 } from '../auth/authSlice';
 
-import type { Transaction } from './householdtypes';
 import Auth from '../auth/Auth';
 import { formatMonth } from '../utils/formatting';
 import Home from './pages/Home';

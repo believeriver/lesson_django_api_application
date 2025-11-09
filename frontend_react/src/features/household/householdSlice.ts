@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 import type { RootState } from '../../app/store';
-import type { Transaction } from './householdtypes';
+// import type { Transaction } from './types';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 const apiUrlHousehold = `${apiUrl}api_household/transactions/`;

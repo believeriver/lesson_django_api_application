@@ -4,7 +4,7 @@ import { Box, useMediaQuery, useTheme } from '@mui/material';
 import { format } from 'date-fns';
 import type { DateClickArg } from '@fullcalendar/interaction';
 
-import type { Transaction } from '../householdtypes';
+import type { Transaction } from '../types';
 
 interface HomeProps {
   monthlyTransactions: Transaction[];

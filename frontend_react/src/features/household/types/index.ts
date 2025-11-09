@@ -9,12 +9,18 @@ export type expenseCategory =
   | '交通費';
 
 export interface Transaction {
-  id: string;
-  date: string;
+  id: number;
   amount: number;
+  type: string;
+  date: string;
+  category: string;
   content: string;
-  type: TransactionType;
-  category: incomeCategory | expenseCategory;
+  // id: string;
+  // date: string;
+  // amount: number;
+  // content: string;
+  // type: TransactionType;
+  // category: incomeCategory | expenseCategory;
 }
 
 export interface Balance {
