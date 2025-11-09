@@ -6,6 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import SideBar from '../common/SideBar';
 import { Outlet } from 'react-router-dom';
 
 // define
@@ -41,6 +42,50 @@ export default function AppLayout() {
     >
       <CssBaseline />
       {/* Header */}
+      <AppBar
+        position="fixed"
+        sx={{
+          width: { md: `calc(100% - ${drawerWidth}px)` },
+          ml: { md: `${drawerWidth}px` },
+        }}
+      >
+        <Toolbar>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2, display: { md: 'none' } }}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" noWrap component="div">
+            Responsive drawer
+          </Typography>
+        </Toolbar>
+      </AppBar>
+
+      {/* Sidebar */}
+      <SideBar
+        drawerWidth={drawerWidth}
+        mobileOpen={mobileOpen}
+        handleDrawerToggle={handleDrawerToggle}
+        handleDrawerClose={handleDrawerClose}
+        handleDrawerTransitionEnd={handleDrawerTransitionEnd}
+      />
+
+      {/* Main Contents */}
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          p: 3,
+          width: { md: `calc(100% - ${drawerWidth}px)` },
+        }}
+      >
+        <Toolbar />
+        <Outlet />
+      </Box>
     </Box>
   );
 }

@@ -19,6 +19,26 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/household" element={<HouseholdMain />} />
         </Routes>
       </BrowserRouter>
+      {/* <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <Router>
+            <Routes>
+              <Route path="/household/home" element={<AppLayout />}>
+                <Route
+                  index
+                  element={
+                    <Home
+                      monthlyTransactions={monthlyTransactions}
+                      setCurrentMonth={setCurrentMonth}
+                    />
+                  }
+                />
+                <Route path="/household/report" element={<Report />} />
+                <Route path="*" element={<NoMatch />} />
+              </Route>
+            </Routes>
+          </Router>
+        </ThemeProvider> */}
     </Provider>
   </StrictMode>
 );

@@ -21,7 +21,14 @@ import type { Transaction } from './householdtypes';
 import Auth from '../auth/Auth';
 import { formatMonth } from '../utils/formatting';
 import Home from './pages/Home';
-import Navigation from '../front/Navigation'
+import Navigation from '../front/Navigation';
+import { ThemeProvider } from '@emotion/react';
+import { theme } from './theme/theme';
+import { CssBaseline } from '@mui/material';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import AppLayout from './components/layout/AppLayout';
+import Report from './pages/Report';
+import NoMatch from './pages/NoMatch';
 
 const HouseholdMain: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -65,6 +72,26 @@ const HouseholdMain: React.FC = () => {
           setCurrentMonth={setCurrentMonth}
         />
       ) : (
+        // <ThemeProvider theme={theme}>
+        //   <CssBaseline />
+        //   <Router>
+        //     <Routes>
+        //       <Route path="/household/home" element={<AppLayout />}>
+        //         <Route
+        //           index
+        //           element={
+        //             <Home
+        //               monthlyTransactions={monthlyTransactions}
+        //               setCurrentMonth={setCurrentMonth}
+        //             />
+        //           }
+        //         />
+        //         <Route path="/household/report" element={<Report />} />
+        //         <Route path="*" element={<NoMatch />} />
+        //       </Route>
+        //     </Routes>
+        //   </Router>
+        // </ThemeProvider>
         <Auth />
       )}
     </div>
