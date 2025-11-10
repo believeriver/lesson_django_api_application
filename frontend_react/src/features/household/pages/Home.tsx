@@ -13,6 +13,21 @@ interface HomeProps {
 
 const Home = ({ monthlyTransactions, setCurrentMonth }: HomeProps) => {
   console.log('[INFO] monthlyTransactions in Home.tsx:', monthlyTransactions);
+  const today = format(new Date(), 'yyyy-MM-dd');
+  const [currentDay, setCurrentDay] = useState(today);
+  const [isEntryDrawerOpen, setIsEntryDrawerOpen] = useState(false);
+  const [selectedTransaction, setSelectedTransaction] =
+    useState<Transaction | null>(null);
+  const [isMobileDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
+
+  // function
+  const dailyTransactions = monthlyTransactions.filter((transaction) => {
+    return transaction.date === currentDay;
+  });
 
   return (
     <Box sx={{ display: 'flex' }}>
