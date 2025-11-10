@@ -9,6 +9,8 @@ import Typography from '@mui/material/Typography';
 import SideBar from '../common/SideBar';
 import { Outlet } from 'react-router-dom';
 
+import Navigation from '../../../front/Navigation'
+
 // define
 const drawerWidth = 240;
 
@@ -59,6 +61,7 @@ export default function AppLayout() {
           >
             <MenuIcon />
           </IconButton>
+          {/* <Navigation /> */}
           <Typography variant="h6" noWrap component="div">
             Responsive drawer
           </Typography>
