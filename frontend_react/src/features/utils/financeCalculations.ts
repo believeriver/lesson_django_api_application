@@ -1,7 +1,7 @@
 import type { Balance, Transaction } from '../household/types';
 
 export function financeCalculations(transactions: Transaction[]): Balance {
-  return transactions.reduce(
+  return transactions.reduce<Balance>(
     (acc, transaction) => {
       if (transaction.type == 'income') {
         acc.income += transaction.amount;
