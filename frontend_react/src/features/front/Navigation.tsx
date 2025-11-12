@@ -104,11 +104,12 @@ const Core: React.FC = () => {
   return (
     <div>
       <div className={styles.core_header}>
-        <h1 className={styles.core_title}>SNS clone</h1>
+        {/* <h1 className={styles.core_title}>SNS clone</h1> */}
+        <Link to="/" className={styles.core_title}>Menu</Link>
         {profile?.nickName ? (
           <>
             {/* ログインに成功したら表示 */}
-            <Link to="/">Menu</Link>
+            {/* <Link to="/">Menu</Link> */}
             <div className={styles.core_logout}>
               {isLoadingAuth && <CircularProgress />}
               <Button
@@ -145,7 +146,7 @@ const Core: React.FC = () => {
         ) : (
           <div>
             {/* ログインしていない時に表示するボタン */}
-            <Link to="/">Menu</Link>
+            {/* <Link to="/">Menu</Link> */}
             <Button
               onClick={() => {
                 dispatch(setOpenSignIn());
