@@ -6,17 +6,18 @@ import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import type { Transaction } from '../types';
 import { financeCalculations } from '../../utils/financeCalculations';
 import { formatCurrency } from '../../utils/formatting';
-import { theme } from '../theme/theme';
+// import { theme } from '../theme/theme';
 
 interface MonthlySummaryProps {
   monthlyTransactions: Transaction[];
 }
 
 const MonthlySummary = ({ monthlyTransactions }: MonthlySummaryProps) => {
-  const res= financeCalculations(monthlyTransactions);
-  const income = res.income
-  const expense = res.expense
-  const balance = res.balance
+  // const res= financeCalculations(monthlyTransactions);
+  // const income = res.income
+  // const expense = res.expense
+  // const balance = res.balance
+  const {income, expense, balance}= financeCalculations(monthlyTransactions);
   console.log(
     '[INFO]MonthlySummary.tsx: monthlyTransactions:',
     monthlyTransactions

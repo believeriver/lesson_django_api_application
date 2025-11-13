@@ -4,9 +4,9 @@ export function financeCalculations(transactions: Transaction[]): Balance {
   return transactions.reduce<Balance>(
     (acc, transaction) => {
       if (transaction.type == 'income') {
-        acc.income += transaction.amount;
+        acc.income += Number(transaction.amount);
       } else {
-        acc.expense += transaction.amount;
+        acc.expense += Number(transaction.amount);
       }
       acc.balance = acc.income - acc.expense;
       return acc;
@@ -30,9 +30,9 @@ export function calculateDailyBalances(
     }
 
     if (transaction.type === 'income') {
-      acc[day].income += transaction.amount;
+      acc[day].income += Number(transaction.amount);
     } else {
-      acc[day].expense += transaction.amount;
+      acc[day].expense += Number(transaction.amount);
     }
 
     acc[day].expense = acc[day].income - acc[day].expense;
