@@ -8,6 +8,7 @@ const apiUrl = import.meta.env.VITE_API_URL;
 const apiUrlHousehold = `${apiUrl}api_household/transactions/`;
 
 //API
+// Get
 export const fetchAsyncGetHouseholdTransactions = createAsyncThunk(
   'household/get',
   async () => {
@@ -21,9 +22,12 @@ export const fetchAsyncGetHouseholdTransactions = createAsyncThunk(
     } catch (err: any) {
       console.log('[ERROR]: fetchAsyncGetHouseholdTransactions: ', err.message);
       // alert(`[ERROR]: fetchAsyncGetPosts: ${err.message}`);
+      
     }
   }
 );
+
+//POST
 
 // main(createSlice) ----
 export const householdSlice = createSlice({

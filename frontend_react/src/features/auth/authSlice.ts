@@ -10,7 +10,7 @@ const apiUrl = import.meta.env.VITE_API_URL;
 //API function ------------
 export const fetchAsyncLogin = createAsyncThunk(
   'auth/post',
-  async (auth: AuthProps) => {
+  async (auth: AuthProps, thunkAPI) => {
     try {
       const res = await axios.post(`${apiUrl}authen/jwt/create`, auth, {
         headers: {
@@ -22,6 +22,10 @@ export const fetchAsyncLogin = createAsyncThunk(
       console.log(`${apiUrl}authen/jwt/create`);
       console.log('[ERROR]: fetchAsyncLogin: ', err.message);
       // alert(`[ERROR]: fetchAsyncLogin: ${err.message}`);
+      return thunkAPI.rejectWithValue(
+        err.response?.data?.detail || "Login failed"
+      )
+
     }
   }
 );
@@ -174,6 +178,10 @@ export const authSlice = createSlice({
     builder.addCase(fetchAsyncLogin.fulfilled, (state, action) => {
       localStorage.setItem('localJWT', action.payload.access);
     });
+    builder.addCase(fetchAsyncLogin.rejected, (state, action) => {
+      state.isLoadingAuth = false
+      console.log(action.error)
+    })
     builder.addCase(fetchAsyncCreateProf.fulfilled, (state, action) => {
       state.myprofile = action.payload;
     });

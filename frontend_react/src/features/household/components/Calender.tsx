@@ -11,7 +11,7 @@ import interactionPlugin from '@fullcalendar/interaction/index.js';
 import type { Balance, Transaction, CalendarContent } from '../types';
 import { calculateDailyBalances } from '../../utils/financeCalculations';
 import { formatCurrency } from '../../utils/formatting';
-import { theme } from '../theme/theme';
+// import { theme } from '../theme/theme';
 
 interface CalendarProps {
   monthlyTransactions: Transaction[];
@@ -32,6 +32,7 @@ const Calender = ({
 }: CalendarProps) => {
   //1.日付ごとの収支を計算する
   const dailyBalances = calculateDailyBalances(monthlyTransactions);
+  const theme = useTheme()
 
   //2.FulCalendar用のイベントを生成する
   const createCalendarEvents = (
@@ -92,6 +93,7 @@ const Calender = ({
       events={[...calendarEvents, backgroundEvent]}
       eventContent={renderEventContent}
       datesSet={handleDateSet}
+      dateClick={onDateClick}
     />
   );
 };
