@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 import type { RootState } from '../../app/store';
+import type { Transaction } from './types';
 // import type { Transaction } from './types';
 
 const apiUrl = import.meta.env.VITE_API_URL;
@@ -22,12 +23,70 @@ export const fetchAsyncGetHouseholdTransactions = createAsyncThunk(
     } catch (err: any) {
       console.log('[ERROR]: fetchAsyncGetHouseholdTransactions: ', err.message);
       // alert(`[ERROR]: fetchAsyncGetPosts: ${err.message}`);
-      
     }
   }
 );
 
 //POST
+export const fetchAsyncAddHouseholdTransaction = createAsyncThunk(
+  'household/post',
+  async (transaction: Transaction) => {
+    try {
+      const res = await axios.post(apiUrlHousehold, transaction, {
+        headers: {
+          Authorization: `JWT ${localStorage.localJWT}`,
+        },
+      });
+      return res.data;
+    } catch (err: any) {
+      console.log('[ERROR]: fetchAsyncAddHouseholdTransaction: ', err.message);
+    }
+  }
+);
+
+//Update
+export const fetchAsyncUpdateHouseholdTransaction = createAsyncThunk(
+  'household/put',
+  async (transaction: Transaction) => {
+    try {
+      const res = await axios.put(
+        `${apiUrlHousehold}${transaction.id}/`,
+        transaction,
+        {
+          headers: {
+            Authorization: `JWT ${localStorage.localJWT}`,
+          },
+        }
+      );
+      return res.data;
+    } catch (err: any) {
+      console.log(
+        '[ERROR]: fetchAsyncUpdateHouseholdTransaction: ',
+        err.message
+      );
+    }
+  }
+);
+
+//Delete
+export const fetchAsyncDeleteHouseholdTransaction = createAsyncThunk(
+  'household/delete',
+  async (id: number) => {
+    try {
+      const res = await axios.delete(`${apiUrlHousehold}${id}/`, {
+        headers: {
+          Authorization: `JWT ${localStorage.localJWT}`,
+        },
+      });
+      return id;
+    } catch (err: any) {
+      console.log(
+        '[ERROR]: fetchAsyncDeleteHouseholdTransaction: ',
+        err.message
+      );
+    }
+  }
+);
 
 // main(createSlice) ----
 export const householdSlice = createSlice({

@@ -180,6 +180,9 @@ export const authSlice = createSlice({
     });
     builder.addCase(fetchAsyncLogin.rejected, (state, action) => {
       state.isLoadingAuth = false
+      state.openSignIn = true,
+      state.openSignUp = false,
+      state.openProfile = false,
       console.log(action.error)
     })
     builder.addCase(fetchAsyncCreateProf.fulfilled, (state, action) => {
