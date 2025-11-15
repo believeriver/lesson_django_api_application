@@ -129,6 +129,37 @@ export const householdSlice = createSlice({
         };
       }
     );
+    builder.addCase(
+      fetchAsyncAddHouseholdTransaction.fulfilled,
+      (state, action) => {
+        return {
+          ...state,
+          transactions: [action.payload, ...state.transactions],
+        };
+      }
+    );
+    builder.addCase(
+      fetchAsyncUpdateHouseholdTransaction.fulfilled,
+      (state, action) => {
+        return {
+          ...state,
+          transactions: state.transactions.map((t) =>
+            t.id === action.payload.id ? action.payload : t
+          ),
+        };
+      }
+    );
+    builder.addCase(
+      fetchAsyncDeleteHouseholdTransaction.fulfilled,
+      (state, action) => {
+        return {
+          ...state,
+          transactions: state.transactions.filter(
+            (t) => t.id !== action.payload
+          ),
+        };
+      }
+    );
   },
 });
 
