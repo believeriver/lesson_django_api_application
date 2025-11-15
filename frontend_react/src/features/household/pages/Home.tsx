@@ -6,6 +6,7 @@ import type { DateClickArg } from '@fullcalendar/interaction';
 
 import type { Transaction } from '../types';
 import MonthlySummary from '../components/MonthlySummary';
+import Calendar  from '../components/Calender';
 
 interface HomeProps {
   monthlyTransactions: Transaction[];
@@ -79,7 +80,14 @@ const Home = ({ monthlyTransactions, setCurrentMonth }: HomeProps) => {
       {/* Left sidebar */}
       <Box sx={{ flexGrow: 1 }}>
         <MonthlySummary monthlyTransactions={monthlyTransactions} />
-        <div>Calender</div>
+        <Calendar
+          monthlyTransactions={monthlyTransactions}
+          setCurrentMonth={setCurrentMonth}
+          setCurrentDay={setCurrentDay}
+          currentDay={currentDay}
+          today={today}
+          onDateClick={handleDateClick}
+        />
       </Box>
       {/* Right Main bar */}
       <Box>
