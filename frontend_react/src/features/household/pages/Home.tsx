@@ -7,6 +7,7 @@ import type { DateClickArg } from '@fullcalendar/interaction';
 import type { Transaction } from '../types';
 import MonthlySummary from '../components/MonthlySummary';
 import Calendar  from '../components/Calender';
+import TransactionMenu from '../components/TransactionMenu';
 
 interface HomeProps {
   monthlyTransactions: Transaction[];
@@ -91,7 +92,14 @@ const Home = ({ monthlyTransactions, setCurrentMonth }: HomeProps) => {
       </Box>
       {/* Right Main bar */}
       <Box>
-        <div>TransactionMenu</div>
+        <TransactionMenu 
+          dailyTransactions={dailyTransactions}
+          currentDay={currentDay}
+          onSelectTransaction={handleSelectTransaction}
+          isMobile={isMobile}
+          open={isMobileDrawerOpen}
+          onClose={handleCloseMobileDrawer}
+        />
         <div>TransactionForm</div>
       </Box>
     </Box>
