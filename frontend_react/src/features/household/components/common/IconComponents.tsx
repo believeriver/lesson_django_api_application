@@ -12,7 +12,7 @@ import AddBusinessIcon from "@mui/icons-material/AddBusiness";
 
 import type { expenseCategory, incomeCategory } from '../../types';
 
-const IconComponents: Record<incomeCategory | expenseCategory, JSX.Element> = {
+const IconComponents: Record<string, JSX.Element> = {
   食費: <FastfoodIcon fontSize="small" />,
   日用品: <AlarmIcon fontSize="small" />,
   住居費: <AddHomeIcon fontSize="small" />,
