@@ -27,6 +27,7 @@ const Home = ({ monthlyTransactions, setCurrentMonth }: HomeProps) => {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
+  console.log('[INFO]: isMobile in Home.tsx:', isMobile)
 
   // function -------------------
   const dailyTransactions = monthlyTransactions.filter((transaction) => {
@@ -95,6 +96,7 @@ const Home = ({ monthlyTransactions, setCurrentMonth }: HomeProps) => {
         <TransactionMenu 
           dailyTransactions={dailyTransactions}
           currentDay={currentDay}
+          onAddTransactionForm={handleAddTransactionForm}
           onSelectTransaction={handleSelectTransaction}
           isMobile={isMobile}
           open={isMobileDrawerOpen}

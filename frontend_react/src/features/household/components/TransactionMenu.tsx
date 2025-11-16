@@ -13,7 +13,7 @@ import {
   Grid,
 } from '@mui/material';
 import NotesIcon from '@mui/icons-material/Notes'
-import { AddCircle } from '@mui/icons-material';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 import type { Transaction } from '../types';
 import { formatCurrency } from '../../utils/formatting';
@@ -24,6 +24,7 @@ import { fetchAsyncAddHouseholdTransaction } from '../householdSlice';
 interface TransactionMenuProps {
   dailyTransactions: Transaction[]
   currentDay: string;
+  onAddTransactionForm: () => void;
   onSelectTransaction: (transaction: Transaction) => void
   isMobile: boolean,
   open: boolean
@@ -33,6 +34,7 @@ interface TransactionMenuProps {
 const TransactionMenu = ({
   dailyTransactions,
   currentDay,
+  onAddTransactionForm,
   onSelectTransaction,
   isMobile,
   open,
@@ -40,6 +42,8 @@ const TransactionMenu = ({
 }: TransactionMenuProps) => {
   const menuDrawerWidth = 320
   console.log('[INFO] open in TransactionMenu.tsx', open)
+  console.log('[INFO] isMobile in TransactionMenu.tsx', isMobile)
+  
   return (
     <Drawer 
       sx={{
@@ -67,7 +71,37 @@ const TransactionMenu = ({
         keepMounted: true
       }}
     >
-      Drawer Content
+      <Stack sx={{height: '100%'}} spacing={2}>
+        <Typography fontWeight={'fontWeightBold'}>
+          日時：{currentDay}
+        </Typography>
+        <div>DailySummary</div>
+
+        {/* 内訳タイトル＆内訳追加ボタン */}
+        <Box
+          sx={{
+            display:'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            p: 1,
+          }}
+        >
+          {/* 左側：メモアイコン、テキスト */}
+          <Box display={'flex'} alignItems={'center'}>
+            <NotesIcon sx={{mr: 1}} />
+            <Typography variant='body1'>内訳</Typography>
+          </Box>
+          {/* 右側：追加ボタン */}
+          <Button
+            startIcon={<AddCircleIcon />}
+            color='primary'
+            onClick={onAddTransactionForm}
+          >
+            内訳を追加
+          </Button>
+        </Box>
+        {/* 取引一覧 */}
+      </Stack>
     </Drawer>
   );
 };
