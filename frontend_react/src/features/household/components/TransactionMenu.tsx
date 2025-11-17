@@ -143,6 +143,24 @@ const TransactionMenu = ({
                             </Typography>
                           </Grid>
                           {/* content */}
+                          <Grid size={{xs:4}}>
+                            <Typography variant='body2' gutterBottom>
+                              {transaction.content}
+                            </Typography>
+                          </Grid>
+                          {/* amount */}
+                          <Grid size={{xs: 4.5}}>
+                            <Typography
+                              gutterBottom
+                              textAlign={'right'}
+                              color='text.secondary'
+                              sx={{
+                                wordBreak: 'break-all'
+                              }}
+                            >
+                              {formatCurrency(transaction.amount)}
+                            </Typography>
+                          </Grid>
                         </Grid>
                       </CardContent>
                     </CardActionArea>
