@@ -18,9 +18,10 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import type { Transaction } from '../types';
 import { formatCurrency } from '../../utils/formatting';
 import IconComponents from './common/IconComponents';
+import DailySummary from './DailySummary';
 
-import { fetchAsyncAddHouseholdTransaction } from '../householdSlice';
-import { theme } from '../theme/theme';
+// import { fetchAsyncAddHouseholdTransaction } from '../householdSlice';
+// import { theme } from '../theme/theme';
 
 interface TransactionMenuProps {
   dailyTransactions: Transaction[];
@@ -76,8 +77,10 @@ const TransactionMenu = ({
         <Typography fontWeight={'fontWeightBold'}>
           日時：{currentDay}
         </Typography>
-        <div>DailySummary</div>
-
+        <DailySummary
+          dailyTransactions={dailyTransactions}
+          columns={isMobile ? 3 : 2}
+        />
         {/* 内訳タイトル＆内訳追加ボタン */}
         <Box
           sx={{
@@ -133,9 +136,9 @@ const TransactionMenu = ({
                               ] as React.ReactNode
                             }
                           </Grid>
-                          <Grid size={{xs:2.5}}>
+                          <Grid size={{ xs: 2.5 }}>
                             <Typography
-                              variant='caption'
+                              variant="caption"
                               display={'block'}
                               gutterBottom
                             >
@@ -143,19 +146,19 @@ const TransactionMenu = ({
                             </Typography>
                           </Grid>
                           {/* content */}
-                          <Grid size={{xs:4}}>
-                            <Typography variant='body2' gutterBottom>
+                          <Grid size={{ xs: 4 }}>
+                            <Typography variant="body2" gutterBottom>
                               {transaction.content}
                             </Typography>
                           </Grid>
                           {/* amount */}
-                          <Grid size={{xs: 4.5}}>
+                          <Grid size={{ xs: 4.5 }}>
                             <Typography
                               gutterBottom
                               textAlign={'right'}
-                              color='text.secondary'
+                              color="text.secondary"
                               sx={{
-                                wordBreak: 'break-all'
+                                wordBreak: 'break-all',
                               }}
                             >
                               {formatCurrency(transaction.amount)}
