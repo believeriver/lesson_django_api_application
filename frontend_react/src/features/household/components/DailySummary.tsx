@@ -1,10 +1,10 @@
-import React from 'react';
+// import React from 'react';
 import { Box, Card, CardContent, Grid, Typography } from '@mui/material';
 
 import type { Transaction } from '../types';
 import { financeCalculations } from '../../utils/financeCalculations';
 import { formatCurrency } from '../../utils/formatting';
-import { theme } from '../theme/theme';
+// import { theme } from '../theme/theme';
 
 interface DailySummaryProps {
   dailyTransactions: Transaction[];
