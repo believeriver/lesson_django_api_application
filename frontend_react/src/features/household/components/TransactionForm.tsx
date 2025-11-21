@@ -13,26 +13,92 @@ import {
   Typography,
 } from '@mui/material';
 
-import CloseIcon from '@mui/icons-material/Close'
-import FastfoodIcon from '@mui/icons-material/Fastfood'
-import addHomeIcon from '@mui/icons-material/AddHome'
-import AlarmIcon from '@mui/icons-material/Alarm'
-import Diversity3Icon from "@mui/icons-material/Diversity3";
-import SportsTennisIcon from "@mui/icons-material/SportsTennis";
-import TrainIcon from "@mui/icons-material/Train";
-import WorkIcon from "@mui/icons-material/Work";
-import SavingsIcon from "@mui/icons-material/Savings";
-import AddBusinessIcon from "@mui/icons-material/AddBusiness";
+import CloseIcon from '@mui/icons-material/Close';
+import FastfoodIcon from '@mui/icons-material/Fastfood';
+import AddHomeIcon from '@mui/icons-material/AddHome';
+import AlarmIcon from '@mui/icons-material/Alarm';
+import Diversity3Icon from '@mui/icons-material/Diversity3';
+import SportsTennisIcon from '@mui/icons-material/SportsTennis';
+import TrainIcon from '@mui/icons-material/Train';
+import WorkIcon from '@mui/icons-material/Work';
+import SavingsIcon from '@mui/icons-material/Savings';
+import AddBusinessIcon from '@mui/icons-material/AddBusiness';
 
-import {Controller,useForm} from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form';
 import type { SubmitHandler } from 'react-hook-form';
-import  type { JSX } from '@fullcalendar/core/preact.js';
-import { zodResolver} from '@hookform/resolvers/zod'
+import type { JSX } from '@fullcalendar/core/preact.js';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import type { expenseCategory, incomeCategory, Transaction } from '../types';
+import {
+  fetchAsyncAddHouseholdTransaction,
+  fetchAsyncUpdateHouseholdTransaction,
+  fetchAsyncDeleteHouseholdTransaction,
+} from '../householdSlice';
+import { theme } from '../theme/theme';
 
-const TransactionForm = () => {
-  return <div>TransactionForm</div>;
+interface TransactionFormProps {
+  onCloseForm: () => void;
+  isEntryDrawerOpen: boolean;
+  currentDay: string;
+  isMobile: boolean;
+  selectedTransaction: Transaction | null;
+  setSelectedTransaction: React.Dispatch<
+    React.SetStateAction<Transaction | null>
+  >;
+  isDialogOpen: boolean;
+  setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+type IncomeExpense = 'income' | 'expense';
+
+interface CategoryItem {
+  label: incomeCategory | expenseCategory;
+  icon: JSX.Element;
+}
+
+const TransactionForm = ({
+  onCloseForm,
+  isEntryDrawerOpen,
+  currentDay,
+  isMobile,
+  selectedTransaction,
+  isDialogOpen,
+  setIsDialogOpen,
+}: TransactionFormProps) => {
+  const formWidth = 320;
+  // 支出用カテゴリ
+  const expenseCategories: CategoryItem[] = [
+    { label: '食費', icon: <FastfoodIcon fontSize="small" /> },
+    { label: '日用品', icon: <AlarmIcon fontSize="small" /> },
+    { label: '住居費', icon: <AddHomeIcon fontSize="small" /> },
+    { label: '交際費', icon: <Diversity3Icon fontSize="small" /> },
+    { label: '娯楽', icon: <SportsTennisIcon fontSize="small" /> },
+    { label: '交通費', icon: <TrainIcon fontSize="small" /> },
+  ];
+  // 収入用カテゴリ
+  const incomeCategories: CategoryItem[] = [
+    { label: '給与', icon: <WorkIcon fontSize="small" /> },
+    { label: '副収入', icon: <AddBusinessIcon fontSize="small" /> },
+    { label: '児童手当', icon: <SavingsIcon fontSize="small" /> },
+  ];
+
+  const [categories, setCategories] = useState(expenseCategories);
+
+  return (
+    <Box display={'flex'} justifyContent={'space-between'}>
+      <Typography variant="h6">入力</Typography>
+      {/* 閉じるボタン */}
+      <IconButton
+        onClick={onCloseForm}
+        sx={{
+          color: (theme) => theme.palette.grey[500],
+        }}
+      >
+        <CloseIcon />
+      </IconButton>
+    </Box>
+  );
 };
 
 export default TransactionForm;
