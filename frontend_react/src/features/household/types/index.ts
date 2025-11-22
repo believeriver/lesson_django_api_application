@@ -15,12 +15,16 @@ export interface Transaction {
   date: string;
   category: string;
   content: string;
-  // id: string;
-  // date: string;
-  // amount: number;
-  // content: string;
   // type: TransactionType;
   // category: incomeCategory | expenseCategory;
+}
+
+export interface NewTransaction {
+  amount: number;
+  type: string;
+  date: string;
+  category: string;
+  content: string;
 }
 
 export interface Balance {

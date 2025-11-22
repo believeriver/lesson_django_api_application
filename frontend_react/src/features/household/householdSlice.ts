@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 import type { RootState } from '../../app/store';
-import type { Transaction } from './types';
+import type { Transaction, NewTransaction } from './types';
 // import type { Transaction } from './types';
 
 const apiUrl = import.meta.env.VITE_API_URL;
@@ -30,7 +30,7 @@ export const fetchAsyncGetHouseholdTransactions = createAsyncThunk(
 //POST
 export const fetchAsyncAddHouseholdTransaction = createAsyncThunk(
   'household/post',
-  async (transaction: Transaction) => {
+  async (transaction: NewTransaction) => {
     try {
       const res = await axios.post(apiUrlHousehold, transaction, {
         headers: {

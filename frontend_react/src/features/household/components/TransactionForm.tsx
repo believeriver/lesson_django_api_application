@@ -37,11 +37,13 @@ import {
   fetchAsyncAddHouseholdTransaction,
   fetchAsyncUpdateHouseholdTransaction,
   fetchAsyncDeleteHouseholdTransaction,
+  fetchHouseholdStart,
+  fetchHouseholdEnd,
 } from '../householdSlice';
 import type { AppDispatch } from '../../../app/store';
 import { theme } from '../theme/theme';
 import { transactionSchema, type Schema } from '../validations/schema';
-
+import { fa } from 'zod/v4/locales';
 
 interface TransactionFormProps {
   onCloseForm: () => void;
@@ -71,6 +73,7 @@ const TransactionForm = ({
   selectedTransaction,
   isDialogOpen,
   setIsDialogOpen,
+  setSelectedTransaction,
 }: TransactionFormProps) => {
   const formWidth = 320;
   const dispatch: AppDispatch = useDispatch();
@@ -96,7 +99,8 @@ const TransactionForm = ({
   const {
     control,
     setValue,
-    formState: {errors},
+    watch,
+    formState: { errors },
     handleSubmit,
     reset,
   } = useForm<Schema>({
@@ -107,22 +111,97 @@ const TransactionForm = ({
       category: '',
       content: '',
     },
-    resolver: zodResolver(transactionSchema)
-  })
+    resolver: zodResolver(transactionSchema),
+  });
 
-  //送信処理
+  // 収支タイプを切り替える関数
+  const incomeExpenseToggle = (type: IncomeExpense) => {
+    setValue('type', type);
+    setValue('category', '');
+  };
+
+  //API--------------------------------
+  //送信処理(データベース更新)
   const onSubmit: SubmitHandler<Schema> = async (data) => {
-    if (selectedTransaction){
+    await dispatch(fetchHouseholdStart());
+    if (selectedTransaction) {
       // 選択されている場合の更新処理
       const update_data = {
         id: selectedTransaction.id,
         ...data,
-      }
-      await dispatch(fetchAsyncUpdateHouseholdTransaction(update_data))
+      };
+      await dispatch(fetchAsyncUpdateHouseholdTransaction(update_data));
     } else {
       // 選択されていない場合は新規追加
+      await dispatch(fetchAsyncAddHouseholdTransaction(data));
     }
-  }
+    await dispatch(fetchHouseholdEnd());
+    reset({
+      type: 'expense',
+      date: currentDay,
+      amount: 0,
+      category: '',
+      content: '',
+    });
+  };
+
+  //削除処理
+  const handleDelete = async () => {
+    await dispatch(fetchHouseholdStart());
+    if (selectedTransaction) {
+      await dispatch(
+        fetchAsyncDeleteHouseholdTransaction(selectedTransaction.id)
+      );
+      if (isMobile) {
+        setIsDialogOpen(false);
+      }
+      setSelectedTransaction(null);
+    }
+    await dispatch(fetchHouseholdEnd());
+  };
+
+  //useEffect ---------------------------
+  // 選択肢が更新されたか確認
+  useEffect(() => {
+    if (selectedTransaction) {
+      const categoryExists = categories.some(
+        (category) => category.label === selectedTransaction?.category
+      );
+      setValue('category', categoryExists ? selectedTransaction.category : '');
+    }
+  }, [selectedTransaction, categories]);
+
+  // 日付が変更されたタイミングを処理するuseEffect
+  useEffect(() => {
+    setValue('date', currentDay);
+  }, [currentDay]);
+
+  // 取引が選択されたタイミングが処理を行うuseEffect
+  // フォーム内容を更新(category : 別のuseEffectで更新)
+  useEffect(() => {
+    if (selectedTransaction) {
+      setValue('type', selectedTransaction.type);
+      setValue('date', selectedTransaction.date);
+      setValue('amount', selectedTransaction.amount);
+      setValue('content', selectedTransaction.content);
+    } else {
+      reset({
+        type: 'expense',
+        date: currentDay,
+        amount: 0,
+        category: '',
+        content: '',
+      });
+    }
+  }, [selectedTransaction]);
+
+  //収支タイプを監視して更新
+  const currentType = watch('type');
+  useEffect(() => {
+    const newCategories =
+      currentType === 'expense' ? expenseCategories : incomeCategories;
+    setCategories(newCategories);
+  }, [currentType]);
 
   return (
     <Box display={'flex'} justifyContent={'space-between'}>
