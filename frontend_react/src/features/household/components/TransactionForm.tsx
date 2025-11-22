@@ -29,13 +29,19 @@ import type { SubmitHandler } from 'react-hook-form';
 import type { JSX } from '@fullcalendar/core/preact.js';
 import { zodResolver } from '@hookform/resolvers/zod';
 
+import { useDispatch, useSelector } from 'react-redux';
+
 import type { expenseCategory, incomeCategory, Transaction } from '../types';
 import {
+  fetchAsyncGetHouseholdTransactions,
   fetchAsyncAddHouseholdTransaction,
   fetchAsyncUpdateHouseholdTransaction,
   fetchAsyncDeleteHouseholdTransaction,
 } from '../householdSlice';
+import type { AppDispatch } from '../../../app/store';
 import { theme } from '../theme/theme';
+import { transactionSchema, type Schema } from '../validations/schema';
+
 
 interface TransactionFormProps {
   onCloseForm: () => void;
@@ -67,6 +73,8 @@ const TransactionForm = ({
   setIsDialogOpen,
 }: TransactionFormProps) => {
   const formWidth = 320;
+  const dispatch: AppDispatch = useDispatch();
+
   // 支出用カテゴリ
   const expenseCategories: CategoryItem[] = [
     { label: '食費', icon: <FastfoodIcon fontSize="small" /> },
@@ -84,6 +92,37 @@ const TransactionForm = ({
   ];
 
   const [categories, setCategories] = useState(expenseCategories);
+
+  const {
+    control,
+    setValue,
+    formState: {errors},
+    handleSubmit,
+    reset,
+  } = useForm<Schema>({
+    defaultValues: {
+      type: 'expense',
+      date: currentDay,
+      amount: 0,
+      category: '',
+      content: '',
+    },
+    resolver: zodResolver(transactionSchema)
+  })
+
+  //送信処理
+  const onSubmit: SubmitHandler<Schema> = async (data) => {
+    if (selectedTransaction){
+      // 選択されている場合の更新処理
+      const update_data = {
+        id: selectedTransaction.id,
+        ...data,
+      }
+      await dispatch(fetchAsyncUpdateHouseholdTransaction(update_data))
+    } else {
+      // 選択されていない場合は新規追加
+    }
+  }
 
   return (
     <Box display={'flex'} justifyContent={'space-between'}>
