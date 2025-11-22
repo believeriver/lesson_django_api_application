@@ -203,19 +203,41 @@ const TransactionForm = ({
     setCategories(newCategories);
   }, [currentType]);
 
+  // form
+  const formContent = (
+    <>
+      {/* 入力エリアのヘッダー */}
+      <Box display={'flex'} justifyContent={'space-between'}>
+        <Typography variant="h6">入力</Typography>
+        {/* 閉じるボタン */}
+        <IconButton
+          onClick={onCloseForm}
+          sx={{
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      </Box>
+    </>
+  );
+
+  // main
   return (
-    <Box display={'flex'} justifyContent={'space-between'}>
-      <Typography variant="h6">入力</Typography>
-      {/* 閉じるボタン */}
-      <IconButton
-        onClick={onCloseForm}
-        sx={{
-          color: (theme) => theme.palette.grey[500],
-        }}
-      >
-        <CloseIcon />
-      </IconButton>
-    </Box>
+    <>
+      {isMobile ? (
+        <Dialog
+          open={isDialogOpen}
+          onClose={onCloseForm}
+          fullWidth
+          maxWidth={'sm'}
+        >
+          <DialogContent>{formContent}</DialogContent>
+        </Dialog>
+      ) : (
+        <Box>{formContent}</Box>
+      )}
+    </>
   );
 };
 
