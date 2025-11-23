@@ -6,8 +6,9 @@ import type { DateClickArg } from '@fullcalendar/interaction';
 
 import type { Transaction } from '../types';
 import MonthlySummary from '../components/MonthlySummary';
-import Calendar  from '../components/Calender';
+import Calendar from '../components/Calender';
 import TransactionMenu from '../components/TransactionMenu';
+import TransactionForm from '../components/TransactionForm';
 
 interface HomeProps {
   monthlyTransactions: Transaction[];
@@ -27,7 +28,7 @@ const Home = ({ monthlyTransactions, setCurrentMonth }: HomeProps) => {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
-  console.log('[INFO]: isMobile in Home.tsx:', isMobile)
+  console.log('[INFO]: isMobile in Home.tsx:', isMobile);
 
   // function -------------------
   const dailyTransactions = monthlyTransactions.filter((transaction) => {
@@ -93,7 +94,7 @@ const Home = ({ monthlyTransactions, setCurrentMonth }: HomeProps) => {
       </Box>
       {/* Right Main bar */}
       <Box>
-        <TransactionMenu 
+        <TransactionMenu
           dailyTransactions={dailyTransactions}
           currentDay={currentDay}
           onAddTransactionForm={handleAddTransactionForm}
@@ -102,7 +103,16 @@ const Home = ({ monthlyTransactions, setCurrentMonth }: HomeProps) => {
           open={isMobileDrawerOpen}
           onClose={handleCloseMobileDrawer}
         />
-        <div>TransactionForm</div>
+        <TransactionForm
+          onCloseForm={onCloseForm}
+          isEntryDrawerOpen={isEntryDrawerOpen}
+          currentDay={currentDay}
+          isMobile={isMobile}
+          selectedTransaction={selectedTransaction}
+          isDialogOpen={isDialogOpen}
+          setIsDialogOpen={setIsDialogOpen}
+          setSelectedTransaction={setSelectedTransaction}
+        />
       </Box>
     </Box>
   );
