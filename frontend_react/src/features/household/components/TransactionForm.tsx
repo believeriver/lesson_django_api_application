@@ -43,7 +43,7 @@ import {
 import type { AppDispatch } from '../../../app/store';
 import { theme } from '../theme/theme';
 import { transactionSchema, type Schema } from '../validations/schema';
-import { fa } from 'zod/v4/locales';
+import { fa, fi } from 'zod/v4/locales';
 
 interface TransactionFormProps {
   onCloseForm: () => void;
@@ -219,6 +219,136 @@ const TransactionForm = ({
           <CloseIcon />
         </IconButton>
       </Box>
+      {/* フォーム要素 */}
+      <Box component={'form'} onSubmit={handleSubmit(onSubmit)}>
+        <Stack spacing={2}>
+          {/* 収支切り替えボタン */}
+          <Controller
+            name="type"
+            control={control}
+            render={({ field }) => {
+              return (
+                <ButtonGroup fullWidth>
+                  <Button
+                    variant={
+                      field.value === 'expense' ? 'contained' : 'outlined'
+                    }
+                    color="error"
+                    onClick={() => incomeExpenseToggle('expense')}
+                  >
+                    支出
+                  </Button>
+                  <Button
+                    variant={
+                      field.value === 'income' ? 'contained' : 'outlined'
+                    }
+                    color="primary"
+                    onClick={() => incomeExpenseToggle('income')}
+                  >
+                    収入
+                  </Button>
+                </ButtonGroup>
+              );
+            }}
+          />
+          {/* 日付 */}
+          <Controller
+            name="date"
+            control={control}
+            render={({ field }) => {
+              return (
+                <TextField
+                  {...field}
+                  label="日付"
+                  type="date"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  error={!!errors.date}
+                  helperText={errors.date?.message}
+                />
+              );
+            }}
+          />
+          {/* カテゴリ */}
+          <Controller
+            name="category"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                error={!!errors.category}
+                helperText={errors.category?.message}
+                {...field}
+                id="カテゴリ"
+                label="カテゴリ"
+                select
+              >
+                {categories.map((category, index) => (
+                  <MenuItem value={category.label} key={index}>
+                    <ListItemIcon>
+                      {category.icon as React.ReactNode}{' '}
+                    </ListItemIcon>
+                    {category.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+            )}
+          />
+          {/* 金額 */}
+          <Controller
+            name="amount"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                error={!!errors.amount}
+                helperText={errors.amount?.message}
+                {...field}
+                value={field.value === 0 ? '' : field.value}
+                onChange={(e) => {
+                  const newValue = parseInt(e.target.value, 10) || 0;
+                  field.onChange(newValue);
+                }}
+                label="金額"
+                type="number"
+              />
+            )}
+          />
+          {/* 内容 */}
+          <Controller
+            name="content"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                error={!!errors.content}
+                helperText={errors.content?.message}
+                {...field}
+                label="内容"
+                type="text"
+              />
+            )}
+          />
+          {/* 保存ボタン */}
+          <Button
+            type="submit"
+            variant="contained"
+            color={currentType === 'income' ? 'primary' : 'error'}
+            fullWidth
+          >
+            {selectedTransaction ? '更新' : '保存'}
+          </Button>
+          {/* 削除ボタン */}
+          {selectedTransaction && (
+            <Button
+              onClick={handleDelete}
+              variant="outlined"
+              color="secondary"
+              fullWidth
+            >
+              削除
+            </Button>
+          )}
+        </Stack>
+      </Box>
     </>
   );
 
@@ -226,6 +356,7 @@ const TransactionForm = ({
   return (
     <>
       {isMobile ? (
+        // Mobile
         <Dialog
           open={isDialogOpen}
           onClose={onCloseForm}
@@ -235,7 +366,28 @@ const TransactionForm = ({
           <DialogContent>{formContent}</DialogContent>
         </Dialog>
       ) : (
-        <Box>{formContent}</Box>
+        //PC
+        <Box
+          sx={{
+            position: 'fixed',
+            top: 64,
+            right: isEntryDrawerOpen ? formWidth : '-2%',
+            width: formWidth,
+            height: '100%',
+            bgcolor: 'background.paper',
+            zIndex: (theme) => theme.zIndex.drawer - 1,
+            transition: (theme) =>
+              theme.transitions.create('right', {
+                easing: theme.transitions.easing.sharp,
+                duration: theme.transitions.duration.enteringScreen,
+              }),
+            p: 2,
+            boxSizing: 'border-box',
+            boxShadow: '0px 0px 15px -5px #777777',
+          }}
+        >
+          {formContent}
+        </Box>
       )}
     </>
   );

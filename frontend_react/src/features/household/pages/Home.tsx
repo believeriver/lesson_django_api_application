@@ -41,7 +41,7 @@ const Home = ({ monthlyTransactions, setCurrentMonth }: HomeProps) => {
     if (isMobile) {
       setIsDialogOpen(!isDialogOpen);
     } else {
-      setIsEntryDrawerOpen(isEntryDrawerOpen);
+      setIsEntryDrawerOpen(!isEntryDrawerOpen);
     }
   };
   //フォーム開閉処理(内訳追加ボタン)
