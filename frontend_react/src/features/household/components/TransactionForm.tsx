@@ -41,9 +41,7 @@ import {
   fetchHouseholdEnd,
 } from '../householdSlice';
 import type { AppDispatch } from '../../../app/store';
-import { theme } from '../theme/theme';
 import { transactionSchema, type Schema } from '../validations/schema';
-import { fa, fi } from 'zod/v4/locales';
 
 interface TransactionFormProps {
   onCloseForm: () => void;
