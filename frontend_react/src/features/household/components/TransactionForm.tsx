@@ -29,11 +29,10 @@ import type { SubmitHandler } from 'react-hook-form';
 import type { JSX } from '@fullcalendar/core/preact.js';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import type { expenseCategory, incomeCategory, Transaction } from '../types';
 import {
-  fetchAsyncGetHouseholdTransactions,
   fetchAsyncAddHouseholdTransaction,
   fetchAsyncUpdateHouseholdTransaction,
   fetchAsyncDeleteHouseholdTransaction,
