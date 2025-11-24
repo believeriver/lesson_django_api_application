@@ -73,7 +73,8 @@ export const fetchAsyncDeleteHouseholdTransaction = createAsyncThunk(
   'household/delete',
   async (id: number) => {
     try {
-      const res = await axios.delete(`${apiUrlHousehold}${id}/`, {
+      // const res = await axios.delete(`${apiUrlHousehold}${id}/`, {
+      await axios.delete(`${apiUrlHousehold}${id}/`, {
         headers: {
           Authorization: `JWT ${localStorage.localJWT}`,
         },
