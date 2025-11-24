@@ -14,7 +14,7 @@ import {
 // import Auth from '../auth/Auth';
 import styles from '../core/Core.module.css';
 import type { AppDispatch } from '../../app/store';
-import { fetchAsyncGetHouseholdTransactions } from '../household/householdSlice';
+// import { fetchAsyncGetHouseholdTransactions } from '../household/householdSlice';
 
 import {
   editNickname,
@@ -95,7 +95,7 @@ const Core: React.FC = () => {
           return null;
         }
         //ログインに成功したら、Transactionデータの取得をする
-        await dispatch(fetchAsyncGetHouseholdTransactions());
+        // await dispatch(fetchAsyncGetHouseholdTransactions());
       }
     };
     fetchBootLoader();
