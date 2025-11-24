@@ -4,17 +4,17 @@ import { useSelector, useDispatch } from 'react-redux';
 import type { AppDispatch } from '../../app/store';
 
 import {
-  selectIsLoadingHousehold,
+  // selectIsLoadingHousehold,
   fetchAsyncGetHouseholdTransactions,
-  fetchHouseholdStart,
-  fetchHouseholdEnd,
+  // fetchHouseholdStart,
+  // fetchHouseholdEnd,
   selectTransactions,
 } from './householdSlice';
 
 import {
   fetchAsyncGetMyProf,
   selectMyProfile,
-  selectIsLoadingAuth,
+  // selectIsLoadingAuth,
 } from '../auth/authSlice';
 
 import Auth from '../auth/Auth';
@@ -26,8 +26,8 @@ const HouseholdMain: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const transactions = useSelector(selectTransactions);
   const profile = useSelector(selectMyProfile);
-  const isLoadingAuth = useSelector(selectIsLoadingAuth);
-  const isLoadingHousehold = useSelector(selectIsLoadingHousehold);
+  // const isLoadingAuth = useSelector(selectIsLoadingAuth);
+  // const isLoadingHousehold = useSelector(selectIsLoadingHousehold);
 
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
