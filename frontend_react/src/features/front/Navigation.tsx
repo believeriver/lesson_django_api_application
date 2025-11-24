@@ -4,21 +4,21 @@ import { Link } from 'react-router-dom';
 
 import {
   Button,
-  Grid,
+  // Grid,
   Avatar,
   Badge,
   CircularProgress,
   styled,
 } from '@mui/material';
 
-import Auth from '../auth/Auth';
+// import Auth from '../auth/Auth';
 import styles from '../core/Core.module.css';
 import type { AppDispatch } from '../../app/store';
 import { fetchAsyncGetHouseholdTransactions } from '../household/householdSlice';
 
 import {
   editNickname,
-  selectProfiles,
+  // selectProfiles,
   selectIsLoadingAuth,
   setOpenSignIn,
   resetOpenSignIn,
@@ -27,17 +27,17 @@ import {
   setOpenProfile,
   resetOpenProfile,
   fetchAsyncGetMyProf,
-  fetchAsyncGetProfs,
+  // fetchAsyncGetProfs,
   selectMyProfile,
 } from '../auth/authSlice';
 
 import {
-  selectPosts,
-  selectIsLoadingPost,
-  setOpenNewPost,
+  // selectPosts,
+  // selectIsLoadingPost,
+  // setOpenNewPost,
   resetOpenNewPost,
-  fetchAsyncGetPosts,
-  fetchAsyncGetComments,
+  // fetchAsyncGetPosts,
+  // fetchAsyncGetComments,
 } from '../instapost/instaPostSlice';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -79,7 +79,7 @@ const Core: React.FC = () => {
   const profile = useSelector(selectMyProfile);
   const isLoadingAuth = useSelector(selectIsLoadingAuth);
 
-  console.log('[INFO]: profile in Core.tsx: ', profile);
+  // console.log('[INFO]: profile in Core.tsx: ', profile);
 
   //useEffect
   // コンポーネントのレンダリング後に実行したい処理
