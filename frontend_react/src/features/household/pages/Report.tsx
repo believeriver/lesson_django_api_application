@@ -9,7 +9,7 @@ import {
 } from '../householdSlice';
 import { fetchAsyncGetMyProf, selectMyProfile } from '../../auth/authSlice';
 import Auth from '../../auth/Auth';
-import Navigation from '../../front/Navigation';
+// import Navigation from '../../front/Navigation';
 import { formatMonth } from '../../utils/formatting';
 import MonthSelector from '../components/MonthSelector';
 
@@ -40,19 +40,38 @@ const Report: React.FC = () => {
     return transaction.date.startsWith(formatMonth(currentMonth));
   });
 
+  //Paper style
+  const commonPaperStyle = {
+    height: '400px',
+    display: 'flex',
+    flexDirection: 'column',
+    p: 2,
+  };
+
   return (
     <div>
       {/* <Navigation /> */}
       {profile.nickName ? (
         <Grid container spacing={2}>
           {/* 日付エリア */}
-          <Grid size={{xs: 12}}>
-            <MonthSelector 
+          <Grid size={{ xs: 12 }}>
+            <MonthSelector
               currentMonth={currentMonth}
               setCurrentMonth={setCurrentMonth}
             />
           </Grid>
-          Report
+          {/* 円グラフ */}
+          <Grid size={{ xs: 12, md:4 }}>
+            Paper
+            <Paper sx={commonPaperStyle}>Category chart</Paper>
+          </Grid>
+          {/* 棒グラフ */}
+          <Grid size={{ xs: 12, md: 8}}>
+            Paper
+            <Paper sx={commonPaperStyle}>Bar chart</Paper>
+          </Grid>
+          {/* 取引履歴テーブル */}
+          <Grid size={{ xs: 12 }}>Transaction Table</Grid>
         </Grid>
       ) : (
         <Auth />
