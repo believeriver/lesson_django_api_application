@@ -11,6 +11,7 @@ import { fetchAsyncGetMyProf, selectMyProfile } from '../../auth/authSlice';
 import Auth from '../../auth/Auth';
 import Navigation from '../../front/Navigation';
 import { formatMonth } from '../../utils/formatting';
+import MonthSelector from '../components/MonthSelector';
 
 const Report: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -40,10 +41,23 @@ const Report: React.FC = () => {
   });
 
   return (
-    <Grid container spacing={2}>
-      {/* 日付エリア */}
-      Report
-    </Grid>
+    <div>
+      {/* <Navigation /> */}
+      {profile.nickName ? (
+        <Grid container spacing={2}>
+          {/* 日付エリア */}
+          <Grid size={{xs: 12}}>
+            <MonthSelector 
+              currentMonth={currentMonth}
+              setCurrentMonth={setCurrentMonth}
+            />
+          </Grid>
+          Report
+        </Grid>
+      ) : (
+        <Auth />
+      )}
+    </div>
   );
 };
 
