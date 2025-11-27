@@ -11,7 +11,6 @@ import {
   Box,
   CircularProgress,
   MenuItem,
-  selectClasses,
   TextField,
   Typography,
   useTheme,
@@ -112,7 +111,23 @@ const CategoryChart = ({
     ],
   };
 
-  return <div>CategoryChart</div>;
+  return (
+    <>
+      <TextField>
+        <MenuItem>収入</MenuItem>
+        <MenuItem>支出</MenuItem>
+      </TextField>
+      <Box>
+        {isLoading ? (
+          <CircularProgress />
+        ) : monthlyTransactions.length > 0 ? (
+          <Pie data={data} options={options} />
+        ) : (
+          <Typography>データがありません</Typography>
+        )}
+      </Box>
+    </>
+  );
 };
 
 export default CategoryChart;
