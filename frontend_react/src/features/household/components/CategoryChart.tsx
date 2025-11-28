@@ -15,6 +15,7 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
+import { useSelector } from 'react-redux';
 
 import type {
   expenseCategory,
@@ -23,22 +24,25 @@ import type {
   TransactionType,
 } from '../types';
 
+import { selectIsLoadingHousehold } from '../householdSlice';
+
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 interface CategoryChartProps {
   monthlyTransactions: Transaction[];
-  isLoading: boolean;
+  // isLoading: boolean;
 }
 
 const CategoryChart = ({
   monthlyTransactions,
-  isLoading,
-}: CategoryChartProps) => {
+}: // isLoading,
+CategoryChartProps) => {
   console.log(
     '[INFO] monthlyTransactions in CategoryChart.tsx:',
     monthlyTransactions
   );
 
+  const isLoading = useSelector(selectIsLoadingHousehold);
   const theme = useTheme();
   // Typeの選択、切り替え
   const [selectedType, setSelectedType] = useState<TransactionType>('expense');
@@ -55,9 +59,10 @@ const CategoryChart = ({
       if (!acc[transaction.category]) {
         acc[transaction.category] = 0;
       }
-      acc[transaction.category] += transaction.amount;
+      acc[transaction.category] += Number(transaction.amount);
       return acc;
     }, {} as Record<string, number>);
+  console.log('[INFO] CategoryChart.tsx: categorySums', categorySums);
 
   //　カテゴリー名をlabelとして取得
   const categoryLabels = Object.keys(categorySums) as (
@@ -67,6 +72,8 @@ const CategoryChart = ({
 
   // カテゴリーごとの合計値を取得
   const categoryValues = Object.values(categorySums);
+  console.log('[INFO]: CategoryChart.tsx: categoryLabels:', categoryLabels);
+  console.log('[INFO]: CategoryChart.tsx: categoryValues:', categoryValues);
 
   // pie chart オブジェクト
   const options = {
@@ -113,11 +120,24 @@ const CategoryChart = ({
 
   return (
     <>
-      <TextField>
-        <MenuItem>収入</MenuItem>
-        <MenuItem>支出</MenuItem>
+      <TextField
+        label="収支の種類"
+        select
+        fullWidth
+        value={selectedType}
+        onChange={handleChange}
+      >
+        <MenuItem value={'income'}>収入</MenuItem>
+        <MenuItem value={'expense'}>支出</MenuItem>
       </TextField>
-      <Box>
+      <Box
+        sx={{
+          flexGrow: 1,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
         {isLoading ? (
           <CircularProgress />
         ) : monthlyTransactions.length > 0 ? (

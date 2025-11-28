@@ -6,12 +6,15 @@ import type { AppDispatch } from '../../../app/store';
 import {
   fetchAsyncGetHouseholdTransactions,
   selectTransactions,
+  fetchHouseholdStart,
+  fetchHouseholdEnd,
 } from '../householdSlice';
 import { fetchAsyncGetMyProf, selectMyProfile } from '../../auth/authSlice';
 import Auth from '../../auth/Auth';
 // import Navigation from '../../front/Navigation';
 import { formatMonth } from '../../utils/formatting';
 import MonthSelector from '../components/MonthSelector';
+import CategoryChart from '../components/CategoryChart';
 
 const Report: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -28,7 +31,9 @@ const Report: React.FC = () => {
           return null;
         }
         //ログインに成功したら、Transactionデータの取得をする
+        await dispatch(fetchHouseholdStart());
         await dispatch(fetchAsyncGetHouseholdTransactions());
+        await dispatch(fetchHouseholdEnd());
       }
       return null;
     };
@@ -61,12 +66,15 @@ const Report: React.FC = () => {
             />
           </Grid>
           {/* 円グラフ */}
-          <Grid size={{ xs: 12, md:4 }}>
-            Paper
-            <Paper sx={commonPaperStyle}>Category chart</Paper>
+          <Grid size={{ xs: 12, md: 4 }}>
+            <Paper sx={commonPaperStyle}>
+              <CategoryChart 
+                monthlyTransactions={monthlyTransactions}
+              />
+            </Paper>
           </Grid>
           {/* 棒グラフ */}
-          <Grid size={{ xs: 12, md: 8}}>
+          <Grid size={{ xs: 12, md: 8 }}>
             Paper
             <Paper sx={commonPaperStyle}>Bar chart</Paper>
           </Grid>
