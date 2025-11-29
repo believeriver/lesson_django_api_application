@@ -1,0 +1,91 @@
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  type ChartData,
+} from 'chart.js';
+import { Bar } from 'react-chartjs-2';
+import { Box, Typography, useTheme } from '@mui/material';
+import { CircularProgress } from '@mui/material';
+import { useSelector } from 'react-redux';
+
+import { type Transaction } from '../types';
+import { calculateDailyBalances } from '../../utils/financeCalculations';
+import { selectIsLoadingHousehold } from '../householdSlice';
+
+//Chart
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+interface BarChartProps {
+  monthlyTransactions: Transaction[];
+}
+
+const BarChart = ({ monthlyTransactions }: BarChartProps) => {
+  const theme = useTheme();
+  const isLoading = useSelector(selectIsLoadingHousehold);
+
+  const options = {
+    maintainAspectRatio: false,
+    responsive: true,
+    plugins: {
+      title: {
+        display: true,
+        text: '日別収支',
+      },
+    },
+  };
+
+  //グラフ用のデータを配列に格納
+  const dailyBalances = calculateDailyBalances(monthlyTransactions);
+  const dateLabels = Object.keys(dailyBalances).sort();
+  const expenseData = dateLabels.map((day) => dailyBalances[day].expense);
+  const incomeData = dateLabels.map((day) => dailyBalances[day].income);
+
+  const data: ChartData<'bar'> = {
+    labels: dateLabels,
+    datasets: [
+      {
+        label: '収支',
+        data: expenseData,
+        backgroundColor: theme.palette.expenseColor.light,
+      },
+      {
+        label: '収入',
+        data: incomeData,
+        backgroundColor: theme.palette.incomeColor.light,
+      },
+    ],
+  };
+
+  return (
+    <Box
+      sx={{
+        flexGrow: 1,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      {isLoading ? (
+        <CircularProgress />
+      ) : monthlyTransactions.length > 0 ? (
+        <Bar options={options} data={data} />
+      ) : (
+        <Typography>データがありません</Typography>
+      )}
+    </Box>
+  );
+};
+
+export default BarChart;

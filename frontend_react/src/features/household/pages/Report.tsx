@@ -15,6 +15,7 @@ import Auth from '../../auth/Auth';
 import { formatMonth } from '../../utils/formatting';
 import MonthSelector from '../components/MonthSelector';
 import CategoryChart from '../components/CategoryChart';
+import BarChart from '../components/BarChart';
 
 const Report: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -68,15 +69,14 @@ const Report: React.FC = () => {
           {/* 円グラフ */}
           <Grid size={{ xs: 12, md: 4 }}>
             <Paper sx={commonPaperStyle}>
-              <CategoryChart 
-                monthlyTransactions={monthlyTransactions}
-              />
+              <CategoryChart monthlyTransactions={monthlyTransactions} />
             </Paper>
           </Grid>
           {/* 棒グラフ */}
           <Grid size={{ xs: 12, md: 8 }}>
-            Paper
-            <Paper sx={commonPaperStyle}>Bar chart</Paper>
+            <Paper sx={commonPaperStyle}>
+              <BarChart monthlyTransactions={monthlyTransactions} />
+            </Paper>
           </Grid>
           {/* 取引履歴テーブル */}
           <Grid size={{ xs: 12 }}>Transaction Table</Grid>
