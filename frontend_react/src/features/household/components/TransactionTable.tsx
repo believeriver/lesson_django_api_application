@@ -17,9 +17,10 @@ import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Grid } from '@mui/material';
 import { compareDesc, parseISO } from 'date-fns';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { type Transaction } from '../types';
+import { type AppDispatch } from '../../../app/store';
 import {
   selectIsLoadingHousehold,
   fetchAsyncDeleteHouseholdTransaction,
@@ -52,6 +53,7 @@ function getComparator<Key extends keyof any>(
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
+//テーブルヘッド
 interface TransactionTableHeadProps {
   numSelected: number;
   onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -60,7 +62,6 @@ interface TransactionTableHeadProps {
   rowCount: number;
 }
 
-//テーブルヘッド
 function TransactionTableHead(props: TransactionTableHeadProps) {
   const { onSelectAllClick, numSelected, rowCount } = props;
 
@@ -87,12 +88,102 @@ function TransactionTableHead(props: TransactionTableHeadProps) {
   );
 }
 
+//ツールバー
 interface TransactionTableToolbarProps {
   numSelected: number;
   onDelete: () => void;
 }
 
-const TransactionTable = () => {
+function TransactionTableToolbar(props: TransactionTableToolbarProps) {
+  const { numSelected, onDelete } = props;
+  return (
+    <Toolbar
+      sx={[
+        {
+          pl: { sm: 2 },
+          pr: { sx: 1, sm: 1 },
+        },
+        numSelected > 0 && {
+          bgcolor: (theme) =>
+            alpha(
+              theme.palette.primary.main,
+              theme.palette.action.activatedOpacity
+            ),
+        },
+      ]}
+    >
+      {numSelected > 0 ? (
+        <Typography
+          sx={{ flex: '1 1 100%' }}
+          color="inherit"
+          variant="subtitle1"
+          component="div"
+        >
+          {numSelected} selected
+        </Typography>
+      ) : (
+        <Typography
+          sx={{ flex: '1 1 100$' }}
+          variant="h6"
+          id="tableTitle"
+          component="div"
+        >
+          月の収支
+        </Typography>
+      )}
+      {numSelected > 0 && (
+        <Tooltip title="Delete">
+          <IconButton onClick={onDelete}>
+            <DeleteIcon />
+          </IconButton>
+        </Tooltip>
+      )}
+    </Toolbar>
+  );
+}
+
+//ツールバーに表示する、月の収支表示するためのコンポーネント
+interface FinancialItemProps {
+  title: string;
+  value: number;
+  color: string;
+}
+
+function FInancialItem(props: FinancialItemProps) {
+  const { title, value, color } = props;
+  return (
+    <Grid size={{ xs: 4 }} textAlign={'center'}>
+      <Typography variant="subtitle1" component={'div'}>
+        {title}
+      </Typography>
+      <Typography
+        component={'span'}
+        fontWeight={'fontWeightBold'}
+        sx={{
+          color: color,
+          fontSize: { xs: '.8rem', sm: '1rem', md: '1.2rem' },
+          wordBreak: 'break-word',
+        }}
+      >
+        ¥{formatCurrency(value)}
+      </Typography>
+    </Grid>
+  );
+}
+
+//メイン
+interface TransactionTableProps {
+  monthlyTransactions: Transaction[];
+}
+const TransactionTable = ({ monthlyTransactions }: TransactionTableProps) => {
+  const dispatch: AppDispatch = useDispatch();
+  const theme = useTheme();
+  const [order, setOrder] = React.useState<Order>('asc');
+  const [selected, setSelected] = React.useState<readonly string[]>([]);
+  const [page, setPage] = React.useState(0);
+  const [dense, setDense] = React.useState(false);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
   return <div>TransactionTable</div>;
 };
 
