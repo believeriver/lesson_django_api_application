@@ -174,8 +174,12 @@ function FInancialItem(props: FinancialItemProps) {
 //メイン
 interface TransactionTableProps {
   monthlyTransactions: Transaction[];
+  onDeleteTransactions: (
+    transactionIds: string | readonly string[]
+  ) => Promise<void>;
 }
-const TransactionTable = ({ monthlyTransactions }: TransactionTableProps) => {
+const TransactionTable = (props: TransactionTableProps) => {
+  const { monthlyTransactions, onDeleteTransactions } = props;
   const dispatch: AppDispatch = useDispatch();
   const theme = useTheme();
   const [order, setOrder] = React.useState<Order>('asc');
@@ -183,6 +187,54 @@ const TransactionTable = ({ monthlyTransactions }: TransactionTableProps) => {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.checked) {
+      const newSelected = monthlyTransactions.map((n) => String(n.id));
+      setSelected(newSelected);
+      return;
+    }
+    setSelected([]);
+  };
+
+  const handleClick = (event: React.MouseEvent<unknown>, id: string) => {
+    const selectedIndex = selected.indexOf(id);
+    let newSelected: readonly string[] = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, id);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1)
+      );
+    }
+    setSelected(newSelected);
+  };
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  //データ削除
+  console.log('[INFO]: TransactionTable selected:', selected);
+  const handleDelete = () => {
+    if (window.confirm('Clicked Delete: Do you want to delete ?')) {
+      onDeleteTransactions(selected);
+      setSelected([]);
+    }
+  };
 
   return <div>TransactionTable</div>;
 };

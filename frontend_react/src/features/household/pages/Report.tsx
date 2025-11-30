@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import type { AppDispatch } from '../../../app/store';
 import {
   fetchAsyncGetHouseholdTransactions,
+  fetchAsyncDeleteHouseholdTransaction,
   selectTransactions,
   fetchHouseholdStart,
   fetchHouseholdEnd,
@@ -16,6 +17,7 @@ import { formatMonth } from '../../utils/formatting';
 import MonthSelector from '../components/MonthSelector';
 import CategoryChart from '../components/CategoryChart';
 import BarChart from '../components/BarChart';
+import TransactionTable from '../components/TransactionTable';
 
 const Report: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -45,6 +47,21 @@ const Report: React.FC = () => {
   const monthlyTransactions = transactions.filter((transaction) => {
     return transaction.date.startsWith(formatMonth(currentMonth));
   });
+
+  //Transactionデータを一括削除
+  const handleDeleteTransaction = async (
+    transactionIds: string | readonly string[]
+  ) => {
+    const idsToDelete = Array.isArray(transactionIds)
+      ? transactionIds
+      : [transactionIds];
+    await dispatch(fetchHouseholdStart());
+    for (const id of idsToDelete) {
+      await dispatch(fetchAsyncDeleteHouseholdTransaction(id));
+    }
+    await dispatch(fetchAsyncGetHouseholdTransactions());
+    await dispatch(fetchHouseholdEnd());
+  };
 
   //Paper style
   const commonPaperStyle = {
@@ -79,7 +96,12 @@ const Report: React.FC = () => {
             </Paper>
           </Grid>
           {/* 取引履歴テーブル */}
-          <Grid size={{ xs: 12 }}>Transaction Table</Grid>
+          <Grid size={{ xs: 12 }}>
+            <TransactionTable
+              monthlyTransactions={monthlyTransactions}
+              onDeleteTransactions={handleDeleteTransaction}
+            />
+          </Grid>
         </Grid>
       ) : (
         <Auth />
