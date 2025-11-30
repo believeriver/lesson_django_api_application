@@ -236,6 +236,31 @@ const TransactionTable = (props: TransactionTableProps) => {
     }
   };
 
+  const isSelected = (id: string) => selected.indexOf(id) !== -1;
+  const handleChangeDense = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setDense(event.target.checked);
+  };
+
+  //最終ページの空白行
+  const emptyRows =
+    page > 0
+      ? Math.max(0, (1 + page) * rowsPerPage - monthlyTransactions.length)
+      : 0;
+
+  //取引データから表示件数を取得
+  const visibleRows = React.useMemo(() => {
+    const sortedMonthluTransactions = [...monthlyTransactions].sort((a, b) =>
+      compareDesc(parseISO(a.date), parseISO(b.date))
+    );
+    return sortedMonthluTransactions.slice(
+      page * rowsPerPage,
+      page * rowsPerPage + rowsPerPage
+    )
+  },[order, page, rowsPerPage, monthlyTransactions]);
+
+  const {income, expense, balance}= financeCalculations(monthlyTransactions);
+  console.log(income)
+
   return <div>TransactionTable</div>;
 };
 
