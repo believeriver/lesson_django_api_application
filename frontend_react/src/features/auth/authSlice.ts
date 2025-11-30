@@ -23,9 +23,8 @@ export const fetchAsyncLogin = createAsyncThunk(
       console.log('[ERROR]: fetchAsyncLogin: ', err.message);
       // alert(`[ERROR]: fetchAsyncLogin: ${err.message}`);
       return thunkAPI.rejectWithValue(
-        err.response?.data?.detail || "Login failed"
-      )
-
+        err.response?.data?.detail || 'Login failed'
+      );
     }
   }
 );
@@ -128,6 +127,8 @@ export const authSlice = createSlice({
     openSignUp: false,
     openProfile: false,
     isLoadingAuth: false,
+    isAuthenticated: false,
+    token: null,
     myprofile: {
       id: 0,
       nickName: '',
@@ -176,15 +177,17 @@ export const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchAsyncLogin.fulfilled, (state, action) => {
+      state.token = action.payload.access;
+      state.isAuthenticated = true;
       localStorage.setItem('localJWT', action.payload.access);
     });
     builder.addCase(fetchAsyncLogin.rejected, (state, action) => {
-      state.isLoadingAuth = false
-      state.openSignIn = true,
-      state.openSignUp = false,
-      state.openProfile = false,
-      console.log(action.error)
-    })
+      state.isLoadingAuth = false;
+      (state.openSignIn = true),
+        (state.openSignUp = false),
+        (state.openProfile = false),
+        console.log(action.error);
+    });
     builder.addCase(fetchAsyncCreateProf.fulfilled, (state, action) => {
       state.myprofile = action.payload;
     });
