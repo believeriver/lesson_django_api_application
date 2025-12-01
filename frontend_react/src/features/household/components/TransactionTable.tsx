@@ -58,7 +58,6 @@ interface TransactionTableHeadProps {
   numSelected: number;
   onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
   order: Order;
-  orderBy: string;
   rowCount: number;
 }
 
@@ -293,6 +292,24 @@ const TransactionTable = (props: TransactionTableProps) => {
           numSelected={selected.length}
           onDelete={handleDelete}
         />
+
+        {/* 取引一覧（テーブルデータ） */}
+        <TableContainer>
+          <Table
+            sx={{minWidth: 750}}
+            aria-labelledby='tableTitle'
+            size={dense ? 'small' : 'medium'}
+          >
+            {/* テーブルヘッド */}
+            <TransactionTableHead 
+              numSelected={selected.length}
+              order={order}
+              onSelectAllClick={handleSelectAllClick}
+              rowCount={monthlyTransactions.length}
+            />
+          </Table>
+          {/* テーブルボディ */}
+        </TableContainer>
       </Paper>
     </Box>
   );
