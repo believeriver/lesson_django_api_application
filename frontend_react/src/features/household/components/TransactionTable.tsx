@@ -259,13 +259,40 @@ const TransactionTable = (props: TransactionTableProps) => {
   },[order, page, rowsPerPage, monthlyTransactions]);
 
   const {income, expense, balance}= financeCalculations(monthlyTransactions);
-  console.log(income)
 
   //main　テーブルの見た目を返す
   return (
     <Box sx={{ width: '100%'}}>
       <Paper sx={{ width: '100%', md: 2}}>
-        TransactionTable
+        <Grid
+          container
+          sx={{ borderBottom: '1px solid rgba(244,244,244, 1)'}}
+        >
+          {/* 収入 */}
+          <FInancialItem 
+            title='収入'
+            value={income}
+            color={theme.palette.incomeColor.main}
+          />
+          {/* 支出 */}
+          <FInancialItem 
+            title='支出'
+            value={expense}
+            color={theme.palette.expenseColor.main}
+          />
+          {/* 残高 */}
+          <FInancialItem 
+            title='残高'
+            value={balance}
+            color={theme.palette.balanceColor.main}
+          />
+        </Grid>
+
+        {/* ツールバー */}
+        <TransactionTableToolbar 
+          numSelected={selected.length}
+          onDelete={handleDelete}
+        />
       </Paper>
     </Box>
   );
