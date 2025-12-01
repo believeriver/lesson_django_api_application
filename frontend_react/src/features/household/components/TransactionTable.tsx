@@ -261,7 +261,14 @@ const TransactionTable = (props: TransactionTableProps) => {
   const {income, expense, balance}= financeCalculations(monthlyTransactions);
   console.log(income)
 
-  return <div>TransactionTable</div>;
+  //main　テーブルの見た目を返す
+  return (
+    <Box sx={{ width: '100%'}}>
+      <Paper sx={{ width: '100%', md: 2}}>
+        TransactionTable
+      </Paper>
+    </Box>
+  );
 };
 
 export default TransactionTable;
