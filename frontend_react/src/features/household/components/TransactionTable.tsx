@@ -17,41 +17,41 @@ import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Grid } from '@mui/material';
 import { compareDesc, parseISO } from 'date-fns';
-import { useDispatch, useSelector } from 'react-redux';
+// import { useDispatch, useSelector } from 'react-redux';
 
 import { type Transaction } from '../types';
-import { type AppDispatch } from '../../../app/store';
-import {
-  selectIsLoadingHousehold,
-  fetchAsyncDeleteHouseholdTransaction,
-} from '../householdSlice';
+// import { type AppDispatch } from '../../../app/store';
+// import {
+//   selectIsLoadingHousehold,
+//   fetchAsyncDeleteHouseholdTransaction,
+// } from '../householdSlice';
 import { financeCalculations } from '../../utils/financeCalculations';
 import { formatCurrency } from '../../utils/formatting';
 import IconComponents from './common/IconComponents';
 
-function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
+// function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
+//   if (b[orderBy] < a[orderBy]) {
+//     return -1;
+//   }
+//   if (b[orderBy] > a[orderBy]) {
+//     return 1;
+//   }
+//   return 0;
+// }
 
 type Order = 'asc' | 'desc';
 
-function getComparator<Key extends keyof any>(
-  order: Order,
-  orderBy: Key
-): (
-  a: { [key in Key]: number | string },
-  b: { [key in Key]: number | string }
-) => number {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
+// function getComparator<Key extends keyof any>(
+//   order: Order,
+//   orderBy: Key
+// ): (
+//   a: { [key in Key]: number | string },
+//   b: { [key in Key]: number | string }
+// ) => number {
+//   return order === 'desc'
+//     ? (a, b) => descendingComparator(a, b, orderBy)
+//     : (a, b) => -descendingComparator(a, b, orderBy);
+// }
 
 //テーブルヘッド
 interface TransactionTableHeadProps {
@@ -77,11 +77,11 @@ function TransactionTableHead(props: TransactionTableHeadProps) {
               'aria-label': 'select all deserts',
             }}
           />
-          <TableCell align="left">日付</TableCell>
-          <TableCell align="left">カテゴリ</TableCell>
-          <TableCell align="left">金額</TableCell>
-          <TableCell align="left">内容</TableCell>
         </TableCell>
+        <TableCell align="left">日付</TableCell>
+        <TableCell align="left">カテゴリ</TableCell>
+        <TableCell align="left">金額</TableCell>
+        <TableCell align="left">内容</TableCell>
       </TableRow>
     </TableHead>
   );
@@ -236,9 +236,9 @@ const TransactionTable = (props: TransactionTableProps) => {
   };
 
   const isSelected = (id: string) => selected.indexOf(id) !== -1;
-  const handleChangeDense = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDense(event.target.checked);
-  };
+  // const handleChangeDense = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   setDense(event.target.checked);
+  // };
 
   //最終ページの空白行
   const emptyRows =
@@ -251,10 +251,10 @@ const TransactionTable = (props: TransactionTableProps) => {
   // 再計算をスキップするためのフック」です。
   // 主に「重い計算」や「依存関係用のオブジェクト生成」を最適化するために使います。
   const visibleRows = React.useMemo(() => {
-    const sortedMonthluTransactions = [...monthlyTransactions].sort((a, b) =>
+    const sortedMonthlyTransactions = [...monthlyTransactions].sort((a, b) =>
       compareDesc(parseISO(a.date), parseISO(b.date))
     );
-    return sortedMonthluTransactions.slice(
+    return sortedMonthlyTransactions.slice(
       page * rowsPerPage,
       page * rowsPerPage + rowsPerPage
     );
@@ -311,7 +311,7 @@ const TransactionTable = (props: TransactionTableProps) => {
             <TableBody>
               {visibleRows.map((transaction, index) => {
                 const isItemSelected = isSelected(String(transaction.id));
-                const labelId = `enhanced-table=checkbox-${index}`;
+                const labelId = `enhanced-table-checkbox-${index}`;
 
                 return (
                   <TableRow
