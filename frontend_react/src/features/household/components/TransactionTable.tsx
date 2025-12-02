@@ -179,7 +179,7 @@ interface TransactionTableProps {
 }
 const TransactionTable = (props: TransactionTableProps) => {
   const { monthlyTransactions, onDeleteTransactions } = props;
-  const dispatch: AppDispatch = useDispatch();
+  // const dispatch: AppDispatch = useDispatch();
   const theme = useTheme();
   const [order, setOrder] = React.useState<Order>('asc');
   const [selected, setSelected] = React.useState<readonly string[]>([]);
@@ -247,6 +247,9 @@ const TransactionTable = (props: TransactionTableProps) => {
       : 0;
 
   //取引データから表示件数を取得
+  //useMemoは「計算結果をキャッシュして、依存している値が変わらない限り
+  // 再計算をスキップするためのフック」です。
+  // 主に「重い計算」や「依存関係用のオブジェクト生成」を最適化するために使います。
   const visibleRows = React.useMemo(() => {
     const sortedMonthluTransactions = [...monthlyTransactions].sort((a, b) =>
       compareDesc(parseISO(a.date), parseISO(b.date))
@@ -254,41 +257,38 @@ const TransactionTable = (props: TransactionTableProps) => {
     return sortedMonthluTransactions.slice(
       page * rowsPerPage,
       page * rowsPerPage + rowsPerPage
-    )
-  },[order, page, rowsPerPage, monthlyTransactions]);
+    );
+  }, [order, page, rowsPerPage, monthlyTransactions]);
 
-  const {income, expense, balance}= financeCalculations(monthlyTransactions);
+  const { income, expense, balance } = financeCalculations(monthlyTransactions);
 
   //main　テーブルの見た目を返す
   return (
-    <Box sx={{ width: '100%'}}>
-      <Paper sx={{ width: '100%', md: 2}}>
-        <Grid
-          container
-          sx={{ borderBottom: '1px solid rgba(244,244,244, 1)'}}
-        >
+    <Box sx={{ width: '100%' }}>
+      <Paper sx={{ width: '100%', md: 2 }}>
+        <Grid container sx={{ borderBottom: '1px solid rgba(244,244,244, 1)' }}>
           {/* 収入 */}
-          <FInancialItem 
-            title='収入'
+          <FInancialItem
+            title="収入"
             value={income}
             color={theme.palette.incomeColor.main}
           />
           {/* 支出 */}
-          <FInancialItem 
-            title='支出'
+          <FInancialItem
+            title="支出"
             value={expense}
             color={theme.palette.expenseColor.main}
           />
           {/* 残高 */}
-          <FInancialItem 
-            title='残高'
+          <FInancialItem
+            title="残高"
             value={balance}
             color={theme.palette.balanceColor.main}
           />
         </Grid>
 
         {/* ツールバー */}
-        <TransactionTableToolbar 
+        <TransactionTableToolbar
           numSelected={selected.length}
           onDelete={handleDelete}
         />
@@ -296,20 +296,88 @@ const TransactionTable = (props: TransactionTableProps) => {
         {/* 取引一覧（テーブルデータ） */}
         <TableContainer>
           <Table
-            sx={{minWidth: 750}}
-            aria-labelledby='tableTitle'
+            sx={{ minWidth: 750 }}
+            aria-labelledby="tableTitle"
             size={dense ? 'small' : 'medium'}
           >
             {/* テーブルヘッド */}
-            <TransactionTableHead 
+            <TransactionTableHead
               numSelected={selected.length}
               order={order}
               onSelectAllClick={handleSelectAllClick}
               rowCount={monthlyTransactions.length}
             />
+            {/* テーブルボディ */}
+            <TableBody>
+              {visibleRows.map((transaction, index) => {
+                const isItemSelected = isSelected(String(transaction.id));
+                const labelId = `enhanced-table=checkbox-${index}`;
+
+                return (
+                  <TableRow
+                    hover
+                    onClick={(event) =>
+                      handleClick(event, String(transaction.id))
+                    }
+                    role="checkbox"
+                    aria-checked={isItemSelected}
+                    tabIndex={-1}
+                    key={transaction.id}
+                    selected={isItemSelected}
+                    sx={{ cursor: 'pointer' }}
+                  >
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        color="primary"
+                        checked={isItemSelected}
+                        inputProps={{
+                          'aria-labelledby': labelId,
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell
+                      component="th"
+                      id={labelId}
+                      scope="row"
+                      padding="none"
+                    >
+                      {transaction.date}
+                    </TableCell>
+                    <TableCell
+                      align="left"
+                      sx={{ display: 'flex', alignItems: 'center' }}
+                    >
+                      {IconComponents[transaction.category] as React.ReactNode}
+                      {transaction.category}
+                    </TableCell>
+                    <TableCell align="left">{transaction.amount}</TableCell>
+                    <TableCell align="left">{transaction.content}</TableCell>
+                  </TableRow>
+                );
+              })}
+              {emptyRows > 0 && (
+                <TableRow
+                  sx={{
+                    height: 53 * emptyRows,
+                  }}
+                >
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
+            </TableBody>
           </Table>
-          {/* テーブルボディ */}
         </TableContainer>
+
+        {/* テーブル　下部のページ遷移ボタン */}
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component={'div'}
+          count={monthlyTransactions.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
       </Paper>
     </Box>
   );
