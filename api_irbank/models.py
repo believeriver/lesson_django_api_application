@@ -4,7 +4,7 @@ from django.db import models
 class Company(models.Model):
     code = models.CharField(max_length=20, unique=True)
     name = models.CharField(max_length=255)
-    stock = models.CharField(max_digist=10, decimal_places=2, blank=True)
+    stock = models.DecimalField(max_digits=10, decimal_places=2, blank=True)
     dividend = models.FloatField(blank=True, null=True)
     dividend_rank = models.IntegerField(blank=True, null=True)
     dividend_rank_updated = models.CharField(max_length=100, blank=True)
@@ -15,6 +15,11 @@ class Company(models.Model):
     pbr = models.FloatField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        indexes = [models.Index(fields=['code'])]  # 頻繁検索フィールドにインデックス
+        ordering = ['code']  # デフォルトソート
+        verbose_name_plural = "Companies"  # 管理画面表示改善
 
     def __str__(self):
         return f'{self.code}: {self.name}'
