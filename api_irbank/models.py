@@ -37,7 +37,8 @@ class Financial(models.Model):
     8. payout_ratio: 配当性向
     9. fiscal_year: 会計年度
     """
-    code = models.ForeignKey(Company, on_delete=models.CASCADE, to_field='code')
+    # code = models.ForeignKey(Company, on_delete=models.CASCADE, to_field='code')
+    company_code = models.CharField(max_length=20, db_index=True, default='', blank=True)
     sales = models.DecimalField(max_digits=20, decimal_places=2, blank=True)
     operating_margin = models.FloatField(blank=True)
     eps = models.FloatField(blank=True)
@@ -46,13 +47,13 @@ class Financial(models.Model):
     cash_and_equivalents = models.DecimalField(max_digits=20, decimal_places=2)
     dividend_per_share = models.FloatField(blank=True)
     payout_ratio = models.FloatField(blank=True)
-    fiscal_year = models.CharField(max_length=16, blank=True)
+    fiscal_year = models.CharField(max_length=16)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        unique_together = ['code', 'fiscal_year']  # 企業×年度でユニーク制約
-        indexes = [models.Index(fields=['code', 'fiscal_year'])]
+        unique_together = ['company_code', 'fiscal_year']  # 企業×年度でユニーク制約
+        indexes = [models.Index(fields=['company_code', 'fiscal_year'])]
 
     def __str__(self):
-        return self.code
+        return f'{self.company_code}: {self.fiscal_year}'
