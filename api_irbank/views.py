@@ -4,13 +4,17 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.db.models import F
 from .models import Company, Financial
-from .serializers import CompanySerializer
+from .serializers import CompanySerializer, FinancialSerializer
 
 
 class CompanyViewSet(viewsets.ModelViewSet):
     queryset = Company.objects.all()
     serializer_class = CompanySerializer
 
-    def perform_create(self, serializer):
-        serializer.save(user_household=self.request.user)
+
+class FinancialsViewSet(viewsets.ModelViewSet):
+    queryset = Financial.objects.all()
+    serializer_class = FinancialSerializer
+
+
 

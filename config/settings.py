@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'api_auth.apps.ApiAuthConfig',
     'api_insta.apps.ApiInstaConfig',
     'api_household.apps.ApiHouseholdConfig',
+    'api_irbank.apps.ApiIrbankConfig',
 ]
 
 MIDDLEWARE = [
