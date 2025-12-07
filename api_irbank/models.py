@@ -50,5 +50,9 @@ class Financial(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        unique_together = ['code', 'fiscal_year']  # 企業×年度でユニーク制約
+        indexes = [models.Index(fields=['code', 'fiscal_year'])]
+
     def __str__(self):
         return self.code
