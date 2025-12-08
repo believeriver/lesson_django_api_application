@@ -7,6 +7,7 @@ from .serializers import CompanySerializer, FinancialSerializer
 
 
 class CompanyViewSet(viewsets.ReadOnlyModelViewSet):
+    """GET only"""
     queryset = Company.objects.all()
     serializer_class = CompanySerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
@@ -15,6 +16,7 @@ class CompanyViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class FinancialsViewSet(viewsets.ReadOnlyModelViewSet):
+    """GET only"""
     # queryset = Financial.objects.all()
     serializer_class = FinancialSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
@@ -38,6 +40,11 @@ class FinancialsViewSet(viewsets.ReadOnlyModelViewSet):
 
     filterset_fields = ['company_code', 'fiscal_year']
     search_fields = ['company_code']
+
+
+class AdminFinancialViewSet(viewsets.ModelViewSet):
+    """CRUD for admin"""
+    pass
 
 
 
