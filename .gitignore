@@ -18,3 +18,4 @@ frontend_react/node_modules
 api_irbank/__pycache__
 api_irbank/migrations/__pycache__/
 api_irbank/migrations
+scraping/__pycache__

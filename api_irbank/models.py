@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, transaction
 
 
 class Company(models.Model):
@@ -54,6 +54,15 @@ class Financial(models.Model):
     class Meta:
         unique_together = ['company_code', 'fiscal_year']  # 企業×年度でユニーク制約
         indexes = [models.Index(fields=['company_code', 'fiscal_year'])]
+
+    @staticmethod
+    @transaction.atomic
+    def get_or_create(code, fiscal_year, **data):
+        obj, created = Financial.objects.update_or_create(
+            company_code=code,
+            fiscal_year=fiscal_year,
+            defaults=data)
+        return obj
 
     def __str__(self):
         return f'{self.company_code}: {self.fiscal_year}'

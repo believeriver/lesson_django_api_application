@@ -43,7 +43,12 @@ class FinancialsViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class AdminFinancialViewSet(viewsets.ModelViewSet):
-    """CRUD for admin"""
+    """CRUD for admin
+    example)
+    permission_classes = [IsAdminUser]  # 管理者限定
+    queryset = Financial.objects.all()
+    """
+
     pass
 
 
