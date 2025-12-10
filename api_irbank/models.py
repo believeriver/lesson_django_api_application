@@ -17,9 +17,21 @@ class Company(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        indexes = [models.Index(fields=['code'])]  # 頻繁検索フィールドにインデックス
+        indexes = [
+            models.Index(fields=['code']),
+            models.Index(fields=['name'])
+        ]  # 頻繁検索フィールドにインデックス
         ordering = ['code']  # デフォルトソート
         verbose_name_plural = "Companies"  # 管理画面表示改善
+
+    @staticmethod
+    @transaction.atomic
+    def get_or_create_company(code, fiscal_year, **data):
+        obj, created = Company.objects.update_or_create(
+            company_code=code,
+            dividend_rank_updated=fiscal_year,
+            defaults=data)
+        return obj
 
     def __str__(self):
         return f'{self.code}: {self.name}'
@@ -57,7 +69,7 @@ class Financial(models.Model):
 
     @staticmethod
     @transaction.atomic
-    def get_or_create(code, fiscal_year, **data):
+    def get_or_create_fast(code, fiscal_year, **data):
         obj, created = Financial.objects.update_or_create(
             company_code=code,
             fiscal_year=fiscal_year,
