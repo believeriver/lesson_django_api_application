@@ -8,11 +8,6 @@ class Company(models.Model):
     dividend = models.FloatField(blank=True, null=True)
     dividend_rank = models.IntegerField(blank=True, null=True)
     dividend_rank_updated = models.CharField(max_length=100, blank=True)
-    industry = models.CharField(max_length=10, blank=True)
-    description = models.TextField(blank=True)
-    per = models.FloatField(blank=True, null=True)
-    psr = models.FloatField(blank=True, null=True)
-    pbr = models.FloatField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -26,15 +21,49 @@ class Company(models.Model):
 
     @staticmethod
     @transaction.atomic
-    def get_or_create_company(code, fiscal_year, **data):
+    def get_or_create_company(code, rank_updated_date, **data):
         obj, created = Company.objects.update_or_create(
             company_code=code,
-            dividend_rank_updated=fiscal_year,
+            dividend_rank_updated=rank_updated_date,
             defaults=data)
         return obj
 
     def __str__(self):
         return f'{self.code}: {self.name}'
+
+
+class Information(models.Model):
+    company_code = models.CharField(max_length=16)
+    industry = models.CharField(max_length=10, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    per = models.FloatField(blank=True, null=True)
+    psr = models.FloatField(blank=True, null=True)
+    pbr = models.FloatField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    @classmethod
+    def get_or_create_and_update(
+            cls, _code, _industry, _description, _per, _psr, _pbr):
+        obj, created = cls.objects.get_or_create(
+            company_code=_code,
+            defaults={
+                "industry": _industry,
+                "description": _description,
+                "per": _per,
+                "psr": _psr,
+                "pbr": _pbr,
+            }
+        )
+        if not created:
+            "既存レコード更新"
+            obj.industry = _industry
+            obj.description = _description
+            obj.per = _per
+            obj.psr = _psr
+            obj.pbr = _pbr
+            obj.save()
+        return obj
 
 
 class Financial(models.Model):
