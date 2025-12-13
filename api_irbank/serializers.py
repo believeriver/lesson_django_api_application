@@ -1,15 +1,37 @@
 from rest_framework import serializers
-from .models import Company, Financial
+from .models import Company, Financial, Information
 
 
 class CompanySerializer(serializers.ModelSerializer):
     class Meta:
         model = Company
         fields = [
-            'code', 'name', 'stock', 'dividend', 'dividend_rank',
-            'dividend_rank_updated', 'industry', 'description',
-            'per', 'psr', 'pbr', 'created_at', 'updated_at'
+            'code',
+            'name',
+            'stock',
+            'dividend',
+            'dividend_rank',
+            'dividend_rank_updated'
         ]
+        read_only_fields = ["created_at", "updated_at"]
+
+
+class InformationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Information
+        # 必要なフィールドだけ列挙してもOK
+        fields = [
+            "id",
+            "company_code",
+            "industry",
+            "description",
+            "per",
+            "psr",
+            "pbr",
+            "created_at",
+            "updated_at",
+        ]
+        read_only_fields = ["created_at", "updated_at"]
 
 
 class FinancialSerializer(serializers.ModelSerializer):
@@ -24,6 +46,6 @@ class FinancialSerializer(serializers.ModelSerializer):
             'sales', 'operating_margin', 'eps', 'equity_ratio',
             'operating_cash_flow', 'cash_and_equivalents',
             'dividend_per_share', 'payout_ratio', 'fiscal_year',
-            'created_at', 'updated_at'
         ]
+        read_only_fields = ["created_at", "updated_at"]
 

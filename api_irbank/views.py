@@ -17,7 +17,7 @@ class CompanyViewSet(viewsets.ReadOnlyModelViewSet):
 
 class FinancialsViewSet(viewsets.ReadOnlyModelViewSet):
     """GET only"""
-    # queryset = Financial.objects.all()
+    queryset = Financial.objects.all()
     serializer_class = FinancialSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
 
