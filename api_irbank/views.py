@@ -37,12 +37,6 @@ class CompanyViewSet(viewsets.ModelViewSet):
     ordering = ['dividend_rank']
 
     def get_queryset(self):
-        # Information事前取得（N+1回避）
-        # company_codes = Company.objects.values_list('code', flat=True)
-        # information_dataset = Information.objects.filter(
-        #     company_code__in=company_codes
-        # ).order_by('company_code', '-updated_at')
-
         # フィルタリング後の会社コードのみ取得
         company_codes = self.queryset.values_list('code', flat=True).distinct()
 
@@ -91,31 +85,40 @@ class InformationViewSet(viewsets.ReadOnlyModelViewSet):
     search_fields = ['company_code']
 
 
-class FinancialsViewSet(viewsets.ReadOnlyModelViewSet):
-    """GET only"""
+class FinancialViewSet(viewsets.ModelViewSet):
+    """
+    GET    /api_irbank/financial/                    # 全件リスト（Company情報付き）
+    GET    /api_irbank/financial/?company_code=2914  # 会社別全年度
+    GET    /api_irbank/financial/?fiscal_year=2024   # 年度別
+    GET    /api_irbank/financial/2914/2024/03/       # 単一詳細
+    ?ordering=-operating_margin                      # 利益率降順
+    ?page=2                                          # ページネーション
+    """
     queryset = Financial.objects.all()
     serializer_class = FinancialSerializer
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    lookup_fields = ['company_code', 'fiscal_year']  # 複合ルックアップ
 
-    def get_queryset(self):
-        # company_codeでフィルタリング → Companyデータも同時取得
-        queryset = Financial.objects.filter(company_code__isnull=False)
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter,
+        filters.OrderingFilter
+    ]
 
-        company_code = self.request.query_params.get('company_code')
-        fiscal_year = self.request.query_params.get('fiscal_year')
+    pagination_class = PageNumberPagination
+    page_size = 50
 
-        if company_code:
-            queryset = queryset.filter(company_code=company_code)
-        if fiscal_year:
-            queryset = queryset.filter(fiscal_year=fiscal_year)
-
-        # Companyデータをプリフェッチ（N+1回避）
-        return queryset.prefetch_related(
-            Prefetch('company_code', queryset=Company.objects.all(), to_attr='company_obj')
-        )
-
+    # フィルタ（会社コード、年度）
     filterset_fields = ['company_code', 'fiscal_year']
-    search_fields = ['company_code']
+
+    # 検索（会社コード、年度）
+    search_fields = ['company_code', 'fiscal_year']
+
+    # ソート（財務指標）
+    ordering_fields = [
+        'operating_margin', 'eps', 'equity_ratio',
+        'operating_cash_flow', 'payout_ratio', 'fiscal_year'
+    ]
+    ordering = ['-fiscal_year']  # 最新年度優先
 
 
 class AdminFinancialViewSet(viewsets.ModelViewSet):
