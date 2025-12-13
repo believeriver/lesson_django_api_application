@@ -5,8 +5,9 @@ from rest_framework.routers import DefaultRouter
 app_name = 'irbank'
 
 router = DefaultRouter()
-router.register('companies', views.CompanyViewSet)
-router.register('financials', views.FinancialsViewSet)
+router.register(r'companies', views.CompanyViewSet)
+router.register(r'financials', views.FinancialsViewSet)
+router.register(r'information', views.InformationViewSet)
 
 urlpatterns = [
     path('', include(router.urls))

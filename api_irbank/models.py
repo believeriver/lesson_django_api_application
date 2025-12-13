@@ -1,35 +1,92 @@
 from django.db import models, transaction
+from typing import List, Dict
 
 
 class Company(models.Model):
-    code = models.CharField(max_length=20, unique=True)
-    name = models.CharField(max_length=255)
-    stock = models.DecimalField(max_digits=10, decimal_places=2, blank=True)
-    dividend = models.FloatField(blank=True, null=True)
-    dividend_rank = models.IntegerField(blank=True, null=True)
-    dividend_rank_updated = models.CharField(max_length=100, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    code = models.CharField(max_length=16, primary_key=True)
+    name = models.CharField(max_length=100)
+    stock = models.CharField(max_length=32)
+    dividend = models.FloatField()
+    dividend_rank = models.IntegerField()
+    dividend_update = models.CharField(max_length=100)
 
     class Meta:
-        indexes = [
-            models.Index(fields=['code']),
-            models.Index(fields=['name'])
-        ]  # 頻繁検索フィールドにインデックス
-        ordering = ['code']  # デフォルトソート
-        verbose_name_plural = "Companies"  # 管理画面表示改善
-
-    @staticmethod
-    @transaction.atomic
-    def get_or_create_company(code, rank_updated_date, **data):
-        obj, created = Company.objects.update_or_create(
-            company_code=code,
-            dividend_rank_updated=rank_updated_date,
-            defaults=data)
-        return obj
+        db_table = "companies"  # __tablename__相当
 
     def __str__(self):
-        return f'{self.code}: {self.name}'
+        return f"{self.name} ({self.code})"
+
+    @classmethod
+    @transaction.atomic  # トランザクション保証
+    def get_or_create_and_update(cls, _code, _name, _stock, _dividend, _rank, _date):
+        """
+        company_codeでget_or_createし、更新日が異なる場合は更新
+        """
+        obj, created = cls.objects.get_or_create(
+            company_code=_code,
+            defaults={
+                'name': _name,
+                'stock': _stock,
+                'dividend': _dividend,
+                'dividend_rank': _rank,
+                'dividend_update': _date,
+            }
+        )
+
+        if not created and obj.company_dividend_update != _date:
+            # 既存レコード更新
+            obj._stock = _stock
+            obj._dividend = _dividend
+            obj._dividend_rank = _rank
+            obj._dividend_update = _date
+            obj.save()
+
+        return obj
+
+    @classmethod
+    def fetch_code_and_name(cls) -> List[Dict]:
+        """全件取得"""
+        return list(
+            cls.objects.values(
+                'code',
+                'name',
+                'stock',
+                'dividend',
+                'dividend_rank',
+                'dividend_update',
+            )
+        )
+
+    @classmethod
+    def fetch_code_and_name_one(cls, c_code) -> List[Dict]:
+        """単一コード取得"""
+        obj = cls.objects.filter(company_code=c_code).first()
+        if obj:
+            return [{
+                'code': obj.code,
+                'name': obj.name,
+                'stock': obj.stock,
+                'dividend': obj.dividend,
+                'rank': obj.dividend_rank,
+                'dividend_update': obj.dividend_update,
+            }]
+        return []
+
+    @classmethod
+    def fetch_code_and_name_by_name(cls, partial_name: str) -> List[Dict]:
+        """部分一致検索"""
+        return list(
+            cls.objects.filter(
+                company_name__icontains=partial_name  # LIKE '%partial_name%'
+            ).values(
+                'code',
+                'name',
+                'stock',
+                'dividend',
+                'dividend_rank',
+                'dividend_update',
+            )
+        )
 
 
 class Information(models.Model):
