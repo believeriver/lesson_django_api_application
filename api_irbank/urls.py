@@ -6,7 +6,7 @@ app_name = 'irbank'
 
 router = DefaultRouter()
 router.register(r'companies', views.CompanyViewSet)
-router.register(r'financials', views.FinancialsViewSet)
+router.register(r'financials', views.FinancialViewSet)
 router.register(r'information', views.InformationViewSet)
 
 urlpatterns = [
