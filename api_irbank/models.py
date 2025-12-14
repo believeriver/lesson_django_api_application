@@ -24,7 +24,7 @@ class Company(models.Model):
         company_codeでget_or_createし、更新日が異なる場合は更新
         """
         obj, created = cls.objects.get_or_create(
-            company_code=_code,
+            code=_code,
             defaults={
                 'name': _name,
                 'stock': _stock,
@@ -34,7 +34,7 @@ class Company(models.Model):
             }
         )
 
-        if not created and obj.company_dividend_update != _date:
+        if not created and obj.dividend_update != _date:
             # 既存レコード更新
             obj._stock = _stock
             obj._dividend = _dividend
