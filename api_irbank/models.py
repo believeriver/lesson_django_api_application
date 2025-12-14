@@ -91,6 +91,9 @@ class Company(models.Model):
 
 
 class Information(models.Model):
+    """
+    画面/APIで「最新のper /psr /pbr 」を見せるための最新スナップショット。
+    """
     company_code = models.CharField(max_length=16)
     industry = models.CharField(max_length=10, blank=True)
     description = models.TextField(blank=True)
@@ -114,7 +117,7 @@ class Information(models.Model):
             }
         )
         if not created:
-            "既存レコード更新"
+            # 既存レコード更新
             obj.industry = _industry
             obj.description = _description
             obj.per = _per
@@ -122,6 +125,24 @@ class Information(models.Model):
             obj.pbr = _pbr
             obj.save()
         return obj
+
+
+class IndicatorHistory(models.Model):
+    """
+    「いつ、どの企業が、どんな指標だったか」を日別に蓄積する履歴テーブル。
+    """
+    company_code = models.CharField(max_length=16)
+    per = models.FloatField(blank=True, null=True)
+    psr = models.FloatField(blank=True, null=True)
+    pbr = models.FloatField(blank=True, null=True)
+    collected_at = models.DateField()  # 取得日
+
+    class Meta:
+        # 1社×1日につき1レコードだけにする
+        unique_together = [['company_code', 'collected_at']]
+        indexes = [
+            models.Index(fields=['company_code', 'collected_at']),
+        ]
 
 
 class Financial(models.Model):
