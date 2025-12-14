@@ -3,14 +3,14 @@ import os
 import django
 
 
-my_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-my_path = my_path + r'/config'
+my_path = os.path.dirname(os.path.dirname(
+    os.path.dirname(os.path.abspath(__file__))))
 print(f"プロジェクトルート: {my_path}")
 # sys.path.append(my_path)
 sys.path.insert(0, my_path)
 
 # Django設定初期化（必須）
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_api_application.config.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 django.setup()
 
 
@@ -51,4 +51,4 @@ if __name__ == '__main__':
         'dividend_update': '更新日時：2025 / 12 / 10 18: 40'
     }
 
-    # register_company(company_dataset)
+    register_company(company_dataset)

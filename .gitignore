@@ -19,5 +19,5 @@ api_irbank/__pycache__
 api_irbank/migrations/__pycache__/
 api_irbank/migrations
 api_irbank/management/commands/__pycache__/
-scraping/__pycache__
+api_irbank/scraping/__pycache__
 
