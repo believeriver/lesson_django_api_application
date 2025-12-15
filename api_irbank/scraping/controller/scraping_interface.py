@@ -9,11 +9,12 @@ import gc
 
 from bs4 import BeautifulSoup
 from selenium import webdriver
+import lxml
 
-sys.path.append(os.path.dirname(os.path.dirname(
-    os.path.dirname(os.path.abspath(__file__)))))
+import settings
 
-from config import settings
+# sys.path.append(os.path.dirname(os.path.dirname(
+#     os.path.dirname(os.path.abspath(__file__)))))
 
 
 class IDataSet(ABC):
@@ -153,8 +154,11 @@ class FetchDataFromEnJapan(IFetchDataFromUrl):
                 if tr.find('th').text == '企業WEBサイト':
                     post_r_url = tr.find('td').find('a').get('href')
                     print('fromSearch', post_r_url)
+        # else:
+        #     raise
         else:
-            raise
+            print(f"Unhandled URL pattern: {page_url}")
+            return None
 
         return post_r_url
 
