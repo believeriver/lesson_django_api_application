@@ -5,11 +5,9 @@ from typing import List, Optional
 from abc import ABC, abstractmethod
 import requests
 import pandas as pd
-import gc
 
 from bs4 import BeautifulSoup
 from selenium import webdriver
-import lxml
 
 import settings
 
