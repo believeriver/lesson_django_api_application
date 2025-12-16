@@ -1,5 +1,3 @@
-import sys
-import os
 from time import sleep
 from typing import List, Optional
 from abc import ABC, abstractmethod
@@ -8,11 +6,10 @@ import pandas as pd
 
 from bs4 import BeautifulSoup
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 
 import settings
-
-# sys.path.append(os.path.dirname(os.path.dirname(
-#     os.path.dirname(os.path.abspath(__file__)))))
 
 
 class IDataSet(ABC):
@@ -48,7 +45,12 @@ class IFetchDataFromUrl(ABC):
         if is_agent:
             options.add_argument(settings.USER_AGENT)
 
-        driver = webdriver.Chrome(options=options)
+        # driver = webdriver.Chrome(options=options)
+        driver = webdriver.Chrome(
+            service=Service(ChromeDriverManager().install()),
+            options=options,
+        )
+
         driver.implicitly_wait(5)
 
         driver.get(url)
