@@ -47,6 +47,11 @@ class FetchDataFromIRBank(IFetchDataFromUrl):
         detail_url = self._fetch_bs_url_by_selenium(self.company_code)
         if detail_url is not None:
             self._soup_main = self._fetch_soup(detail_url, delay=delay)
+            # print(f"DEBUG: self._soup_main = {self._soup_main is not None}")
+            if self._soup_main:
+                print(f"DEBUG: title = {self._soup_main.title}")
+            else:
+                print("DEBUG: Seleniumでページ取得失敗")
         else:
             print('BS URL is not found.')
 
