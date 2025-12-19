@@ -14,7 +14,7 @@ class CompanyData(IDataSet):
 class FetchDataFromIRBank(IFetchDataFromUrl):
     def __init__(self, dataset: CompanyData, company_code: int) -> None:
         super().__init__()
-        self.base_url = 'https://irbank.net'
+        self.base_url = f"https://irbank.net/{company_code}/results"
         self.url = self.base_url
         self.company_code = company_code
         self.dataset = dataset
@@ -24,36 +24,68 @@ class FetchDataFromIRBank(IFetchDataFromUrl):
         self._td_odd = None
 
     def _fetch_bs_url_by_selenium(self, company_code) -> Optional[str]:
-        bs_url = None
+        """ This is not used. 2025.12.19"""
         driver = self._fetch_driver_by_selenium(self.url, self.delay_time, True, False)
         sleep(1)
-        search_bar = driver.find_element("name", 'query')
-        sleep(1)
-        search_bar.send_keys(company_code)
-        sleep(1)
-        search_bar.submit()
-        sleep(1)
-        company_page = driver.find_element(
-            By.CSS_SELECTOR, 'tr.odd.weaken')
-        bs_tags = company_page.find_elements(
-            By.CSS_SELECTOR, 'ul.nsq > li > a')
-        for tag in bs_tags:
-            if tag.text == "決算":
-                bs_url = tag.get_attribute('href')
-        driver.quit()
-        return bs_url
 
-    def fetch_main_soup(self, delay: int = 10) -> None:
-        detail_url = self._fetch_bs_url_by_selenium(self.company_code)
-        if detail_url is not None:
-            self._soup_main = self._fetch_soup(detail_url, delay=delay)
+        try:
+            # 1. まずページ全体のリンクを全出力して確認
+            all_links = driver.find_elements(By.TAG_NAME, "a")
+            print("=== 全 a タグ（最初の20個） ===")
+            for i, link in enumerate(all_links[:20]):
+                href = link.get_attribute("href") or ""
+                title = link.get_attribute("title") or ""
+                text = link.text.strip()[:30]
+                print(f"{i}: {text} | title='{title}' | href={href}")
+
+            # 2. 「決算」「results」「kessan」関連のリンクを探す
+            print("\n=== 決算関連リンク検索 ===")
+            for link in all_links:
+                text = link.text.lower()
+                href = link.get_attribute("href") or ""
+                if any(word in text for word in ["決算", "results", "kessan"]):
+                    print(f"FOUND: text='{link.text}' href='{href}'")
+
+            # 3. より緩いセレクタで試す
+            selectors_to_try = [
+                "a[href*='results']",  # /results を含む
+                "a[href*='/E']",  # /E00492/results の /E
+                ".nsq a",  # nsq クラスのナビ
+                "nav a",  # ナビゲーション
+                "ul li a",  # リスト内のリンク
+            ]
+
+            for selector in selectors_to_try:
+                try:
+                    elements = driver.find_elements(By.CSS_SELECTOR, selector)
+                    print(f"\n{selector}: {len(elements)} 個見つかりました")
+                    for elem in elements[:5]:  # 最初の5個
+                        print(f"  - {elem.text} -> {elem.get_attribute('href')}")
+                except Exception as e:
+                    print(f"{selector}: エラー {e}")
+
+            # 4. 手動で決算っぽいURLを特定（2914の場合は /E00492/results）
+            # 実際のページでは決算リンクが見つからない場合があるので、
+            # 会社コードから推測するか固定パターンで対応
+            detail_url = f"https://irbank.net/{company_code}/results"  # とりあえずこれで
+            print(f"推測URL: {detail_url}")
+            return detail_url
+
+        finally:
+            driver.quit()
+
+    # def fetch_main_soup(self, delay: int = 10) -> None:
+    def fetch_soup_main(self, delay: int = 10) -> None:
+        # detail_url = self._fetch_bs_url_by_selenium(self.company_code)
+        try:
+            self._soup_main = self._fetch_soup(self.base_url, delay=delay)
             # print(f"DEBUG: self._soup_main = {self._soup_main is not None}")
             if self._soup_main:
                 print(f"DEBUG: title = {self._soup_main.title}")
             else:
                 print("DEBUG: Seleniumでページ取得失敗")
-        else:
-            print('BS URL is not found.')
+        except Exception as e:
+            print(f'[ERROR]: {e}')
 
     @staticmethod
     def convert_units(value: str):
@@ -201,7 +233,8 @@ if __name__ == '__main__':
     item = data_items[0]
 
     fetch_IR_bank = FetchDataFromIRBank(company_list, 2914)
-    fetch_IR_bank.fetch_main_soup(delay=1)
+    # fetch_IR_bank.fetch_main_soup(delay=1)
+    fetch_IR_bank.fetch_soup_main(delay=1)
     fetch_IR_bank.fetch_table_data(item)
     # print(fetch_IR_bank.dataset.companies)
     # fetch_IR_bank.check_fetch_table_data(item)
