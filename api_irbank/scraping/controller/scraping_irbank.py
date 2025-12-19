@@ -75,7 +75,7 @@ class FetchDataFromIRBank(IFetchDataFromUrl):
             driver.quit()
 
     # def fetch_main_soup(self, delay: int = 10) -> None:
-    def fetch_soup_main(self, delay: int = 10) -> None:
+    def fetch_soup_main(self, delay: int = 3) -> None:
         """2025.12.19"""
         try:
             self._soup_main = self._fetch_soup(

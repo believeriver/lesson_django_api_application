@@ -26,7 +26,7 @@ class IFetchDataFromUrl(ABC):
 
     @staticmethod
     def _fetch_content_by_request(url: str, delay: int) -> bytes:
-        print('delay time : ', delay, 'sec')
+        print('delay time : ', delay, 'sec', 'request')
         sleep(delay)
         r = requests.get(url)
         r.raise_for_status()
@@ -37,6 +37,7 @@ class IFetchDataFromUrl(ABC):
     def _fetch_driver_by_selenium(url: str, delay: int,
                                   is_head: bool = True,
                                   is_agent: bool = False) -> webdriver:
+        print('delay time : ', delay, 'sec', 'selenium')
         options = webdriver.ChromeOptions()
         options.add_argument('--incognito')
         if is_head:
