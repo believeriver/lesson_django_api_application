@@ -76,14 +76,11 @@ class FetchDataFromIRBank(IFetchDataFromUrl):
 
     # def fetch_main_soup(self, delay: int = 10) -> None:
     def fetch_soup_main(self, delay: int = 10) -> None:
-        # detail_url = self._fetch_bs_url_by_selenium(self.company_code)
         try:
-            self._soup_main = self._fetch_soup(self.base_url, delay=delay)
-            # print(f"DEBUG: self._soup_main = {self._soup_main is not None}")
+            self._soup_main = self._fetch_soup(
+                self.base_url, delay=delay, method='selenium')
             if self._soup_main:
                 print(f"DEBUG: title = {self._soup_main.title}")
-            else:
-                print("DEBUG: Seleniumでページ取得失敗")
         except Exception as e:
             print(f'[ERROR]: {e}')
 
@@ -235,6 +232,7 @@ if __name__ == '__main__':
     fetch_IR_bank = FetchDataFromIRBank(company_list, 2914)
     # fetch_IR_bank.fetch_main_soup(delay=1)
     fetch_IR_bank.fetch_soup_main(delay=1)
+    print(fetch_IR_bank._soup_main)
     fetch_IR_bank.fetch_table_data(item)
     # print(fetch_IR_bank.dataset.companies)
     # fetch_IR_bank.check_fetch_table_data(item)
