@@ -23,7 +23,7 @@ class FetchDataFromIRBank(IFetchDataFromUrl):
         self._td_obb = None
         self._td_odd = None
 
-    def _fetch_bs_url_by_selenium(self, company_code) -> Optional[str]:
+    def _fetch_test_by_selenium(self, company_code) -> Optional[str]:
         """ This is not used. 2025.12.19"""
         driver = self._fetch_driver_by_selenium(self.url, self.delay_time, True, False)
         sleep(1)
@@ -76,6 +76,7 @@ class FetchDataFromIRBank(IFetchDataFromUrl):
 
     # def fetch_main_soup(self, delay: int = 10) -> None:
     def fetch_soup_main(self, delay: int = 10) -> None:
+        """2025.12.19"""
         try:
             self._soup_main = self._fetch_soup(
                 self.base_url, delay=delay, method='selenium')
@@ -189,15 +190,12 @@ class FetchDataFromIRBank(IFetchDataFromUrl):
         table_soup = self._soup_main.find('div', id=d_items[table_name])
         # search table title
         tb_title = table_soup.select_one("h2")
-        print(tb_title.text)
+        # print(tb_title.text)
         dt_year = table_soup.select("dt")
         dt_datasets = table_soup.select("span.text")
         # year
         for i, dt in enumerate(dt_year):
             print(i, dt.text, self.convert_units(dt_datasets[i].text))
-        # # score
-        # for i, dt in enumerate(dt_datasets):
-        #     print(i, self.convert_units(dt.text))
 
 
 class SaveToCsvFile(ISaveToFile):
@@ -230,12 +228,8 @@ if __name__ == '__main__':
     item = data_items[0]
 
     fetch_IR_bank = FetchDataFromIRBank(company_list, 2914)
-    # fetch_IR_bank.fetch_main_soup(delay=1)
     fetch_IR_bank.fetch_soup_main(delay=1)
-    print(fetch_IR_bank._soup_main)
     fetch_IR_bank.fetch_table_data(item)
-    # print(fetch_IR_bank.dataset.companies)
-    # fetch_IR_bank.check_fetch_table_data(item)
 
     print(company_list.companies)
 
