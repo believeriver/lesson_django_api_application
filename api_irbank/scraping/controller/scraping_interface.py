@@ -35,7 +35,7 @@ class IFetchDataFromUrl(ABC):
 
     @staticmethod
     def _fetch_driver_by_selenium(url: str, delay: int,
-                                  is_head: bool = False,
+                                  is_head: bool = True,
                                   is_agent: bool = False) -> webdriver:
         options = webdriver.ChromeOptions()
         options.add_argument('--incognito')
