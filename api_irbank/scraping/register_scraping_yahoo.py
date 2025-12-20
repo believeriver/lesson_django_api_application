@@ -74,11 +74,11 @@ def scraping(debug_flg: bool = True):
             if debug_flg:
                 print(c_rank, c_code, c_name, c_dividend)
                 print(
-                    company.company_dividend_rank,
-                    company.company_code,
-                    company.company_name,
-                    c_dividend,
-                    company.company_dividend_update)
+                    company.dividend_rank,
+                    company.code,
+                    company.name,
+                    company.dividend,
+                    company.dividend_update)
     gc.collect()
 
 
