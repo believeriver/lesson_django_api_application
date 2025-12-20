@@ -4,10 +4,8 @@ import gc
 import math
 
 my_path = os.path.dirname(os.path.abspath(__file__))
-# print('scraping_yahoo path:', my_path)
 sys.path.append(my_path)
-
-from scraping_interface import IDataSet, IFetchDataFromUrl, ISaveToFile
+from scraping_interface import IDataSet, IFetchDataFromUrl
 
 
 class CompanyData(IDataSet):

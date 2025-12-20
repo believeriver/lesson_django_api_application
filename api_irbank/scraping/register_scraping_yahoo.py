@@ -65,9 +65,6 @@ def scraping(debug_flg: bool = True):
             c_dividend = company['company_dividend']
             c_rank = company['company_rank']
             c_date = company['company_rank_date']
-            # company = Company.get_or_create(
-            #     c_code, c_name, c_stock, float(c_dividend), int(c_rank), str(c_date)
-            # )
             company = Company.get_or_create_and_update(
                 c_code, c_name, c_stock, float(c_dividend), int(c_rank), str(c_date))
 

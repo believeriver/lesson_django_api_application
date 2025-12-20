@@ -1,5 +1,8 @@
+import os
+import sys
 import gc
 
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from scraping_interface import IDataSet, IFetchDataFromUrl
 
 

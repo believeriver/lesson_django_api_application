@@ -1,8 +1,11 @@
+import os
+import sys
 from time import sleep
 import gc
 from typing import Optional
 from selenium.webdriver.common.by import By
 
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from scraping_interface import IDataSet, IFetchDataFromUrl, ISaveToFile
 
 
