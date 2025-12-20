@@ -126,6 +126,9 @@ class Information(models.Model):
             obj.save()
         return obj
 
+    def __str__(self):
+        return f"{self.company_code} ({self.updated_at})"
+
 
 class IndicatorHistory(models.Model):
     """
@@ -143,6 +146,9 @@ class IndicatorHistory(models.Model):
         indexes = [
             models.Index(fields=['company_code', 'collected_at']),
         ]
+
+    def __str__(self):
+        return f"{self.company_code} ({self.collected_at})"
 
 
 class Financial(models.Model):
