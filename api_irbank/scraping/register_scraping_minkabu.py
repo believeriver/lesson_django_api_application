@@ -41,13 +41,13 @@ def numeric_or_none(val):
 def scraping(_start: int = 1, _end: int = 10):
     company_code_list = []
     company_list = Company.fetch_code_and_name()
-    logger.debug({'max number of companies': len(company_list)})
+    logger.info({'max number of companies': len(company_list)})
     for company in company_list[_start:_end]:
         logger.debug({'code': company['code']})
         company_code_list.append(company['code'])
 
     for index, company_code in enumerate(company_code_list):
-        logging.info({"index": index, "code": company_code})
+        logger.info({"index": index, "code": company_code})
         datasets = CompanyData()
         scraping = FetchDataFromMinkabu(datasets, company_code)
         scraping.fetch_soup_main(delay=3)
