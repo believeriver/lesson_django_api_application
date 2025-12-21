@@ -1,18 +1,15 @@
 import sys
 import os
 import logging
-from typing import List
 import gc
 from optparse import OptionParser
 
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
 import django
 
-my_path = os.path.dirname(os.path.dirname(
+project_root = os.path.dirname(os.path.dirname(
     os.path.dirname(os.path.abspath(__file__))))
-print(f"プロジェクトルート: {my_path}")
-sys.path.insert(0, my_path)
+print(f"Project Path: {project_root}")
+sys.path.insert(0, project_root )
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 django.setup()
 
