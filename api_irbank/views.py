@@ -3,6 +3,7 @@ from rest_framework import viewsets, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.pagination import PageNumberPagination
 from django.db.models import Prefetch
+from rest_framework.permissions import AllowAny
 
 from .models import Company, Financial, Information
 from .serializers import CompanySerializer, FinancialSerializer, InformationSerializer
@@ -17,6 +18,8 @@ class CompanyViewSet(viewsets.ModelViewSet):
     ?ordering=-dividend                  # 配当降順
     ?page=2                              # 51-100件
     """
+    permission_classes = [AllowAny]
+
     queryset = Company.objects.all()
     serializer_class = CompanySerializer
     lookup_field = 'code'  # primary key = code
@@ -36,24 +39,24 @@ class CompanyViewSet(viewsets.ModelViewSet):
     ordering_fields = ['dividend', 'dividend_rank']
     ordering = ['dividend_rank']
 
-    def get_queryset(self):
-        # フィルタリング後の会社コードのみ取得
-        company_codes = self.queryset.values_list('code', flat=True).distinct()
-
-        # select_relatedでN+1回避
-        information_dataset = Information.objects.filter(
-            company_code__in=company_codes
-        ).select_related('company').order_by('company_code', '-updated_at')
-
-        info_dict = {}
-        for info in information_dataset:
-            code = info.company_code
-            if code not in info_dict:
-                info_dict[code] = []
-            info_dict[code].append(InformationSerializer(info).data)
-
-        self.request.information_dataset = info_dict
-        return super().get_queryset()
+    # def get_queryset(self):
+    #     # フィルタリング後の会社コードのみ取得
+    #     company_codes = self.queryset.values_list('code', flat=True).distinct()
+    #
+    #     # select_relatedでN+1回避
+    #     information_dataset = Information.objects.filter(
+    #         company_code__in=company_codes
+    #     ).select_related('company').order_by('company_code', '-updated_at')
+    #
+    #     info_dict = {}
+    #     for info in information_dataset:
+    #         code = info.company_code
+    #         if code not in info_dict:
+    #             info_dict[code] = []
+    #         info_dict[code].append(InformationSerializer(info).data)
+    #
+    #     self.request.information_dataset = info_dict
+    #     return super().get_queryset()
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
