@@ -166,7 +166,7 @@ class Financial(models.Model):
     """
     # code = models.ForeignKey(Company, on_delete=models.CASCADE, to_field='code')
     company_code = models.CharField(max_length=16, verbose_name="会社コード", default='')
-    sales = models.CharField(max_length=32, blank=True, verbose_name="売上高")
+    sales = models.CharField(max_length=32, blank=True, null=True, default=0, verbose_name="売上高")
     operating_margin = models.FloatField(blank=True, null=True, verbose_name="営業利益率")
     eps = models.FloatField(blank=True, null=True, verbose_name="EPS")
     equity_ratio = models.FloatField(blank=True, null=True, verbose_name="自己資本比率")
