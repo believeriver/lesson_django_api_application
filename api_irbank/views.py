@@ -69,23 +69,24 @@ class InformationViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Information.objects.all()
     serializer_class = InformationSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    permission_classes = [AllowAny]
 
-    def get_queryset(self):
-        queryset = Information.objects.filter(company_code__isnull=False)
-        company_code = self.request.query_params.get('company_code')
-        fiscal_year = self.request.query_params.get('fiscal_year')
-
-        if company_code:
-            queryset = queryset.filter(company_code=company_code)
-        if fiscal_year:
-            queryset = queryset.filter(fiscal_year=fiscal_year)
-
-        return queryset.prefetch_related(
-            Prefetch('company_code', queryset=Company.objects.all(), to_attr='company_obj')
-        )
-
-    filterset_fields = ['company_code', 'fiscal_year']
-    search_fields = ['company_code']
+    # def get_queryset(self):
+    #     queryset = Information.objects.filter(company_code__isnull=False)
+    #     company_code = self.request.query_params.get('company_code')
+    #     fiscal_year = self.request.query_params.get('fiscal_year')
+    #
+    #     if company_code:
+    #         queryset = queryset.filter(company_code=company_code)
+    #     if fiscal_year:
+    #         queryset = queryset.filter(fiscal_year=fiscal_year)
+    #
+    #     return queryset.prefetch_related(
+    #         Prefetch('company_code', queryset=Company.objects.all(), to_attr='company_obj')
+    #     )
+    #
+    # filterset_fields = ['company_code', 'fiscal_year']
+    # search_fields = ['company_code']
 
 
 class FinancialViewSet(viewsets.ModelViewSet):
@@ -97,6 +98,8 @@ class FinancialViewSet(viewsets.ModelViewSet):
     ?ordering=-operating_margin                      # 利益率降順
     ?page=2                                          # ページネーション
     """
+    permission_classes = [AllowAny]
+
     queryset = Financial.objects.all()
     serializer_class = FinancialSerializer
     lookup_fields = ['company_code', 'fiscal_year']  # 複合ルックアップ
