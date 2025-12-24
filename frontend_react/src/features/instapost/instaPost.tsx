@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Avatar, Divider, Checkbox } from '@mui/material';
-import { makeStyles, createStyles } from '@mui/styles';
+// import { makeStyles, createStyles } from '@mui/styles';
 import { Favorite, FavoriteBorder } from '@mui/icons-material';
 import { AvatarGroup } from '@mui/material';
 
@@ -20,7 +20,7 @@ import {
 } from './instaPostSlice';
 
 import type { InstPostProps } from '../types';
-import { current } from '@reduxjs/toolkit';
+// import { current } from '@reduxjs/toolkit';
 
 // const useStyles = makeStyles((theme: any) =>
 //   createStyles({
