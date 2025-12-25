@@ -8,11 +8,14 @@ class Company(models.Model):
     name = models.CharField(max_length=100, blank=True)
     stock = models.CharField(max_length=32, blank=True)
     dividend = models.FloatField(blank=True, null=True, default=None)
-    dividend_rank = models.IntegerField(blank=True, null=True, default=0)
+    # dividend_rank = models.IntegerField(blank=True, null=True, default=0)
+    dividend_rank = models.IntegerField(blank=True, null=True, default=None)
     dividend_update = models.CharField(max_length=100, blank=True, default='')
 
     class Meta:
         db_table = "companies"  # __tablename__相当
+        ordering = ['code']  # 追加推奨
+        indexes = [models.Index(fields=['code'])]  # 検索高速化
 
     def __str__(self):
         return f"{self.name} ({self.code})"
@@ -36,10 +39,11 @@ class Company(models.Model):
 
         if not created and obj.dividend_update != _date:
             # 既存レコード更新
-            obj._stock = _stock
-            obj._dividend = _dividend
-            obj._dividend_rank = _rank
-            obj._dividend_update = _date
+            obj.name = _name
+            obj.stock = _stock
+            obj.dividend = _dividend
+            obj.dividend_rank = _rank
+            obj.dividend_update = _date
             obj.save()
 
         return obj
@@ -61,7 +65,7 @@ class Company(models.Model):
     @classmethod
     def fetch_code_and_name_one(cls, c_code) -> List[Dict]:
         """単一コード取得"""
-        obj = cls.objects.filter(company_code=c_code).first()
+        obj = cls.objects.filter(code=c_code).first()
         if obj:
             return [{
                 'code': obj.code,
@@ -78,7 +82,7 @@ class Company(models.Model):
         """部分一致検索"""
         return list(
             cls.objects.filter(
-                company_name__icontains=partial_name  # LIKE '%partial_name%'
+                name__icontains=partial_name  # LIKE '%partial_name%'
             ).values(
                 'code',
                 'name',
