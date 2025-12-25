@@ -1,6 +1,6 @@
 from django.db import models, transaction
-from typing import List, Dict
-import json
+from typing import List, Dict, Optional, Tuple
+# import json
 
 
 class Company(models.Model):
@@ -98,7 +98,8 @@ class Information(models.Model):
     """
     画面/APIで「最新のper /psr /pbr 」を見せるための最新スナップショット。
     """
-    company_code = models.CharField(max_length=16)
+    # company_code = models.CharField(max_length=16, unique=True)
+    company_code = models.CharField(max_length=16, unique=True)
     industry = models.CharField(max_length=10, blank=True)
     description = models.TextField(blank=True)
     per = models.FloatField(blank=True, null=True)
@@ -106,6 +107,10 @@ class Information(models.Model):
     pbr = models.FloatField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "information"  # Companyに合わせる
+        indexes = [models.Index(fields=['company_code'])]  # 検索高速化
 
     @classmethod
     def get_or_create_and_update(
@@ -127,7 +132,8 @@ class Information(models.Model):
             obj.per = _per
             obj.psr = _psr
             obj.pbr = _pbr
-            obj.save()
+            # obj.save()
+            obj.save(update_fields=['industry', 'description', 'per', 'psr', 'pbr'])  # 高速化
         return obj
 
     def __str__(self):
