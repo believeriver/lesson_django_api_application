@@ -63,6 +63,11 @@ class Company(models.Model):
         )
 
     @classmethod
+    def fetch_all(cls) -> List[Dict]:
+        """2025.12.27"""
+        return list(cls.objects.values())
+
+    @classmethod
     def fetch_code_and_name_one(cls, c_code) -> List[Dict]:
         """単一コード取得"""
         obj = cls.objects.filter(code=c_code).first()
@@ -97,9 +102,18 @@ class Company(models.Model):
 class Information(models.Model):
     """
     画面/APIで「最新のper /psr /pbr 」を見せるための最新スナップショット。
+
+    2025.12.27 ForeignKey Company
     """
     # company_code = models.CharField(max_length=16, unique=True)
     company_code = models.CharField(max_length=16, unique=True)
+    company = models.OneToOneField(
+        Company,
+        on_delete=models.CASCADE,
+        primary_key=True,  # Company.codeを主キー再利用
+        related_name='information',
+        db_column='company_code'  # 既存カラム名をそのまま利用！
+    )
     industry = models.CharField(max_length=10, blank=True)
     description = models.TextField(blank=True)
     per = models.FloatField(blank=True, null=True)
@@ -115,8 +129,17 @@ class Information(models.Model):
     @classmethod
     def get_or_create_and_update(
             cls, _code, _industry, _description, _per, _psr, _pbr):
+        """
+        2025.12.27 company_code だけ Companyを取得：Informationをget_or_create
+        """
+        try:
+            company = Company.objects.get(code=_code)
+        except Exception as e:
+            print(f"Company {_code} not found. ERROR:{e}")
+
         obj, created = cls.objects.get_or_create(
-            company_code=_code,
+            # company_code=_code,
+            company=company,
             defaults={
                 "industry": _industry,
                 "description": _description,

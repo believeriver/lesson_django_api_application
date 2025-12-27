@@ -64,7 +64,8 @@ def scraping(_start: int = 1, _end: int = 10):
                 c_code, c_industry, c_description, c_per, c_psr, c_pbr)
 
             logger.info({
-                "code": db_info.company_code,
+                # "code": db_info.company_code,
+                "code": db_info.company.code,
                 "industry": db_info.industry,
                 "PER": db_info.per,
                 "PSR": db_info.psr,
