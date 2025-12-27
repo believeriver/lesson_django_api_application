@@ -216,8 +216,6 @@ class Financial(models.Model):
         Company,
         on_delete=models.CASCADE,
         related_name='financials',  # 複数データになるので plural
-        # null=True,
-        # blank=True,
     )
     sales = models.CharField(max_length=32, blank=True, null=True, default=0, verbose_name="売上高")
     operating_margin = models.FloatField(blank=True, null=True, verbose_name="営業利益率")
@@ -280,11 +278,6 @@ class Financial(models.Model):
 
     @classmethod
     def get_financial_by_company_code(cls, code):
-        # """単一取得（存在しない場合はNone）"""
-        # try:
-        #     return cls.objects.get(company_code=code)
-        # except cls.DoesNotExist:
-        #     return None
         try:
             company = Company.objects.get(code=code)
             return cls.objects.filter(company=company).latest('fiscal_year')
@@ -293,12 +286,6 @@ class Financial(models.Model):
 
     @classmethod
     def get_financials_by_company_code(cls, code):
-        """複数取得（年度別リスト）"""
-        # return list(cls.objects.filter(company_code=code)
-        #             .values('company_code', 'sales', 'operating_margin',
-        #                     'eps', 'equity_ratio', 'operating_cash_flow',
-        #                     'cash_and_equivalents', 'dividend_per_share',
-        #                     'payout_ratio', 'fiscal_year'))
         """年度ごとのリスト取得"""
         return list(
             cls.objects.filter(company__code=code)
