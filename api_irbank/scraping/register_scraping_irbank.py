@@ -128,7 +128,7 @@ class ScrapingIRBank(object):
             cashflow, equivalents, dividend, payout)
         logger.info({
             "action": "save_financial_database",
-            "company_code": db_financial.company_code,
+            "company_code": db_financial.company.code,
             "fiscal_year": db_financial.fiscal_year,
         })
 

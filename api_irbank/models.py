@@ -110,7 +110,6 @@ class Information(models.Model):
     2025.12.27 ForeignKey Company
     """
     # company_code = models.CharField(max_length=16, unique=True)
-    # company_code = models.CharField(max_length=16, unique=True)
     company = models.OneToOneField(
         Company,
         on_delete=models.CASCADE,
@@ -128,7 +127,6 @@ class Information(models.Model):
 
     class Meta:
         db_table = "information"  # Companyに合わせる
-        # indexes = [models.Index(fields=['company_code'])]  # 検索高速化
 
     @classmethod
     def get_or_create_and_update(
@@ -214,21 +212,12 @@ class Financial(models.Model):
     8. payout_ratio: 配当性向
     9. fiscal_year: 会計年度
     """
-    # code = models.ForeignKey(Company, on_delete=models.CASCADE, to_field='code')
-    # company_code = models.CharField(max_length=16, verbose_name="会社コード", default='')
-    # company = models.ForeignKey(
-    #     Company,
-    #     on_delete=models.CASCADE,
-    #     primary_key=True,  # Company.codeを主キー再利用
-    #     related_name='financial',
-    #     db_column='company_code'  # 既存カラム名をそのまま利用！
-    # )
     company = models.ForeignKey(  # ← OneToOne → ForeignKey に修正
         Company,
         on_delete=models.CASCADE,
         related_name='financials',  # 複数データになるので plural
-        null=True,
-        blank=True,
+        # null=True,
+        # blank=True,
     )
     sales = models.CharField(max_length=32, blank=True, null=True, default=0, verbose_name="売上高")
     operating_margin = models.FloatField(blank=True, null=True, verbose_name="営業利益率")
@@ -245,7 +234,6 @@ class Financial(models.Model):
 
     class Meta:
         db_table = 'financials'
-        # unique_together = ['company_code', 'fiscal_year']  # 企業×年度でユニーク制約
         constraints = [
             models.UniqueConstraint(
                 fields=['company', 'fiscal_year'],
@@ -257,7 +245,7 @@ class Financial(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.company_code} - {self.fiscal_year}"
+        return f"{self.company.code} - {self.fiscal_year}"
 
     @classmethod
     def get_or_create_update(

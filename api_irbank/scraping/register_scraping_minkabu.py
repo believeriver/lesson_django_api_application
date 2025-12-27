@@ -41,6 +41,7 @@ def numeric_or_none(val):
 def scraping(_start: int = 1, _end: int = 10):
     company_code_list = []
     company_list = Company.fetch_code_and_name()
+    company_list = sorted(company_list, key=lambda x: x["dividend_rank"])
     logger.info({'max number of companies': len(company_list)})
     for company in company_list[_start:_end]:
         logger.debug({'code': company['code']})
@@ -49,9 +50,9 @@ def scraping(_start: int = 1, _end: int = 10):
     for index, company_code in enumerate(company_code_list):
         logger.info({"index": index, "code": company_code})
         datasets = CompanyData()
-        scraping = FetchDataFromMinkabu(datasets, company_code)
-        scraping.fetch_soup_main(delay=3)
-        scraping.fetch_select_item()
+        _scraping = FetchDataFromMinkabu(datasets, company_code)
+        _scraping.fetch_soup_main(delay=3)
+        _scraping.fetch_select_item()
         for company in datasets.companies:
             logging.debug(company)
             c_code = company['code']
