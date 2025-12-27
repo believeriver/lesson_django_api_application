@@ -16,7 +16,8 @@ class Company(models.Model):
     dividend_update = models.CharField(max_length=100, blank=True, default='')
 
     class Meta:
-        db_table = "companies"  # __tablename__相当
+        # db_table = "companies"  # __tablename__相当
+        db_table = "company"
         ordering = ['code']  # 追加推奨
         indexes = [models.Index(fields=['code'])]  # 検索高速化
 
@@ -113,9 +114,9 @@ class Information(models.Model):
     company = models.OneToOneField(
         Company,
         on_delete=models.CASCADE,
-        primary_key=True,  # Company.codeを主キー再利用
+        # primary_key=True,  # Company.codeを主キー再利用
         related_name='information',
-        db_column='company_code'  # 既存カラム名をそのまま利用！
+        # db_column='company_code'  # 既存カラム名をそのまま利用！
     )
     industry = models.CharField(max_length=10, blank=True)
     description = models.TextField(blank=True)
