@@ -127,7 +127,7 @@ class Information(models.Model):
 
     class Meta:
         db_table = "information"  # Companyに合わせる
-        indexes = [models.Index(fields=['company_code'])]  # 検索高速化
+        # indexes = [models.Index(fields=['company_code'])]  # 検索高速化
 
     @classmethod
     def get_or_create_and_update(
@@ -139,6 +139,7 @@ class Information(models.Model):
             company = Company.objects.get(code=_code)
         except Exception as e:
             logger.warning(f"Company {_code} not found. ERROR:{e}")
+            return None
 
         obj, created = cls.objects.get_or_create(
             # company_code=_code,
@@ -159,7 +160,8 @@ class Information(models.Model):
             obj.psr = _psr
             obj.pbr = _pbr
             # obj.save()
-            obj.save(update_fields=['industry', 'description', 'per', 'psr', 'pbr'])  # 高速化
+            obj.save(
+                update_fields=['industry', 'description', 'per', 'psr', 'pbr','updated_at'])  # 高速化
         return obj
 
     def __str__(self):
@@ -171,12 +173,10 @@ class IndicatorHistory(models.Model):
     「いつ、どの企業が、どんな指標だったか」を日別に蓄積する履歴テーブル。
     """
     # company_code = models.CharField(max_length=16)
-    company = models.OneToOneField(
+    company = models.ForeignKey(  # ← OneToOneField → ForeignKey
         Company,
         on_delete=models.CASCADE,
-        primary_key=True,  # Company.codeを主キー再利用
-        related_name='indicator_history',
-        db_column='company_code'  # 既存カラム名をそのまま利用！
+        related_name='indicator_histories'  # 複数形！
     )
     per = models.FloatField(blank=True, null=True)
     psr = models.FloatField(blank=True, null=True)
@@ -184,14 +184,20 @@ class IndicatorHistory(models.Model):
     collected_at = models.DateField()  # 取得日
 
     class Meta:
-        # 1社×1日につき1レコードだけにする
-        unique_together = [['company_code', 'collected_at']]
+        # 1社×1日 = 1レコード（複合キー）
+        constraints = [
+            models.UniqueConstraint(
+                fields=['company', 'collected_at'],  # ← company_id使用
+                name='unique_company_date'
+            )
+        ]
         indexes = [
-            models.Index(fields=['company_code', 'collected_at']),
+            models.Index(fields=['company', 'collected_at']),
+            models.Index(fields=['collected_at']),
         ]
 
     def __str__(self):
-        return f"{self.company_code} ({self.collected_at})"
+        return f"{self.company.code} ({self.collected_at})"
 
 
 class Financial(models.Model):
@@ -209,12 +215,19 @@ class Financial(models.Model):
     """
     # code = models.ForeignKey(Company, on_delete=models.CASCADE, to_field='code')
     # company_code = models.CharField(max_length=16, verbose_name="会社コード", default='')
-    company = models.OneToOneField(
+    # company = models.ForeignKey(
+    #     Company,
+    #     on_delete=models.CASCADE,
+    #     primary_key=True,  # Company.codeを主キー再利用
+    #     related_name='financial',
+    #     db_column='company_code'  # 既存カラム名をそのまま利用！
+    # )
+    company = models.ForeignKey(  # ← OneToOne → ForeignKey に修正
         Company,
         on_delete=models.CASCADE,
-        primary_key=True,  # Company.codeを主キー再利用
-        related_name='financial',
-        db_column='company_code'  # 既存カラム名をそのまま利用！
+        related_name='financials',  # 複数データになるので plural
+        null=True,
+        blank=True,
     )
     sales = models.CharField(max_length=32, blank=True, null=True, default=0, verbose_name="売上高")
     operating_margin = models.FloatField(blank=True, null=True, verbose_name="営業利益率")
@@ -231,7 +244,16 @@ class Financial(models.Model):
 
     class Meta:
         db_table = 'financials'
-        unique_together = ['company_code', 'fiscal_year']  # 企業×年度でユニーク制約
+        # unique_together = ['company_code', 'fiscal_year']  # 企業×年度でユニーク制約
+        constraints = [
+            models.UniqueConstraint(
+                fields=['company', 'fiscal_year'],
+                name='unique_company_fiscal_year'
+            )
+        ]
+        indexes = [
+            models.Index(fields=['company', 'fiscal_year']),
+        ]
 
     def __str__(self):
         return f"{self.company_code} - {self.fiscal_year}"
@@ -241,12 +263,13 @@ class Financial(models.Model):
             cls, _code, _fiscal_year, _sale, _margin, _eps, _equity,
             _cashflow, _equivalents, _dividend, _payout):
         """
-                2025.12.27 company_code だけ Companyを取得：Informationをget_or_create
-                """
+        2025.12.27 company_code だけ Companyを取得：Informationをget_or_create
+        """
         try:
             company = Company.objects.get(code=_code)
         except Exception as e:
             logger.warning(f"Company {_code} not found. ERROR:{e}")
+            return None
 
         """Django版upsert（1クエリ）"""
         obj, created = cls.objects.update_or_create(
@@ -268,17 +291,30 @@ class Financial(models.Model):
 
     @classmethod
     def get_financial_by_company_code(cls, code):
-        """単一取得（存在しない場合はNone）"""
+        # """単一取得（存在しない場合はNone）"""
+        # try:
+        #     return cls.objects.get(company_code=code)
+        # except cls.DoesNotExist:
+        #     return None
         try:
-            return cls.objects.get(company_code=code)
-        except cls.DoesNotExist:
+            company = Company.objects.get(code=code)
+            return cls.objects.filter(company=company).latest('fiscal_year')
+        except (cls.DoesNotExist, Company.DoesNotExist):
             return None
 
     @classmethod
     def get_financials_by_company_code(cls, code):
         """複数取得（年度別リスト）"""
-        return list(cls.objects.filter(company_code=code)
-                    .values('company_code', 'sales', 'operating_margin',
-                            'eps', 'equity_ratio', 'operating_cash_flow',
-                            'cash_and_equivalents', 'dividend_per_share',
-                            'payout_ratio', 'fiscal_year'))
+        # return list(cls.objects.filter(company_code=code)
+        #             .values('company_code', 'sales', 'operating_margin',
+        #                     'eps', 'equity_ratio', 'operating_cash_flow',
+        #                     'cash_and_equivalents', 'dividend_per_share',
+        #                     'payout_ratio', 'fiscal_year'))
+        """年度ごとのリスト取得"""
+        return list(
+            cls.objects.filter(company__code=code)
+            .values('company__code', 'sales', 'operating_margin',
+                    'eps', 'equity_ratio', 'operating_cash_flow',
+                    'cash_and_equivalents', 'dividend_per_share',
+                    'payout_ratio', 'fiscal_year')
+        )
