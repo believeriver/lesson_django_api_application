@@ -1,6 +1,9 @@
 from django.db import models, transaction
 from typing import List, Dict, Optional, Tuple
 # import json
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class Company(models.Model):
@@ -106,7 +109,7 @@ class Information(models.Model):
     2025.12.27 ForeignKey Company
     """
     # company_code = models.CharField(max_length=16, unique=True)
-    company_code = models.CharField(max_length=16, unique=True)
+    # company_code = models.CharField(max_length=16, unique=True)
     company = models.OneToOneField(
         Company,
         on_delete=models.CASCADE,
@@ -135,7 +138,7 @@ class Information(models.Model):
         try:
             company = Company.objects.get(code=_code)
         except Exception as e:
-            print(f"Company {_code} not found. ERROR:{e}")
+            logger.warning(f"Company {_code} not found. ERROR:{e}")
 
         obj, created = cls.objects.get_or_create(
             # company_code=_code,
@@ -160,14 +163,21 @@ class Information(models.Model):
         return obj
 
     def __str__(self):
-        return f"{self.company_code} ({self.updated_at})"
+        return f"{self.company.name} ({self.updated_at})"
 
 
 class IndicatorHistory(models.Model):
     """
     「いつ、どの企業が、どんな指標だったか」を日別に蓄積する履歴テーブル。
     """
-    company_code = models.CharField(max_length=16)
+    # company_code = models.CharField(max_length=16)
+    company = models.OneToOneField(
+        Company,
+        on_delete=models.CASCADE,
+        primary_key=True,  # Company.codeを主キー再利用
+        related_name='indicator_history',
+        db_column='company_code'  # 既存カラム名をそのまま利用！
+    )
     per = models.FloatField(blank=True, null=True)
     psr = models.FloatField(blank=True, null=True)
     pbr = models.FloatField(blank=True, null=True)
@@ -198,7 +208,14 @@ class Financial(models.Model):
     9. fiscal_year: 会計年度
     """
     # code = models.ForeignKey(Company, on_delete=models.CASCADE, to_field='code')
-    company_code = models.CharField(max_length=16, verbose_name="会社コード", default='')
+    # company_code = models.CharField(max_length=16, verbose_name="会社コード", default='')
+    company = models.OneToOneField(
+        Company,
+        on_delete=models.CASCADE,
+        primary_key=True,  # Company.codeを主キー再利用
+        related_name='financial',
+        db_column='company_code'  # 既存カラム名をそのまま利用！
+    )
     sales = models.CharField(max_length=32, blank=True, null=True, default=0, verbose_name="売上高")
     operating_margin = models.FloatField(blank=True, null=True, verbose_name="営業利益率")
     eps = models.FloatField(blank=True, null=True, verbose_name="EPS")
@@ -223,9 +240,18 @@ class Financial(models.Model):
     def get_or_create_update(
             cls, _code, _fiscal_year, _sale, _margin, _eps, _equity,
             _cashflow, _equivalents, _dividend, _payout):
+        """
+                2025.12.27 company_code だけ Companyを取得：Informationをget_or_create
+                """
+        try:
+            company = Company.objects.get(code=_code)
+        except Exception as e:
+            logger.warning(f"Company {_code} not found. ERROR:{e}")
+
         """Django版upsert（1クエリ）"""
         obj, created = cls.objects.update_or_create(
-            company_code=_code,
+            # company_code=_code,
+            company=company,
             fiscal_year=_fiscal_year,
             defaults={
                 'sales': _sale,
