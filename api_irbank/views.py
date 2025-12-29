@@ -1,4 +1,5 @@
 from django.db.models import Prefetch, Q
+from django.http import Http404
 
 from rest_framework import viewsets, filters
 from rest_framework.decorators import action
@@ -23,30 +24,61 @@ class CompanyViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Company.objects.select_related('information').prefetch_related('financials')
     serializer_class = CompanyListSerializer
 
-    def get_serializer_class(self):
-        if self.action == 'retrieve':
-            return CompanyDetailSerializer
-        return CompanyListSerializer
-
-    def get_queryset(self):
-        """最適プリロード"""
-        if self.action == 'list':
-            # 一覧：Informationのみ（高速）
-            return Company.objects.select_related('information').order_by('code')
-
-        # 詳細：Information + 全Financial（年度降順）
-        return Company.objects.select_related('information').prefetch_related(
-            Prefetch(
-                'financials',
-                queryset=Financial.objects.order_by('-fiscal_year')
-            )
-        )
+    def get_object(self):
+        """code=PKで詳細取得（idではない）"""
+        code = self.kwargs['pk']  # URL末尾の3205を取得
+        queryset = self.get_queryset()
+        try:
+            return queryset.get(code=code)  # codeで検索！
+        except Company.DoesNotExist:
+            raise Http404(f"Company code '{code}' not found")
 
     def get_serializer_class(self):
         """一覧=Company+Information、詳細=全データ"""
         if self.action == 'retrieve':
             return CompanyDetailSerializer
         return CompanyListSerializer
+        # if self.action == 'retrieve':
+        #     return CompanyDetailSerializer
+        # return CompanyListSerializer
+
+    def get_queryset(self):
+        """企業名・コード検索 + 最適プリロード"""
+        if self.action == 'retrieve':
+            return self.queryset
+            # # 詳細：Financial年度降順(検索パラメータ無視、コード単体取得)
+            # return self.queryset.prefetch_related(
+            #     Prefetch('financials', queryset=Financial.objects.order_by('-fiscal_year')))
+
+        # リストのみ検索ソート
+        queryset = self.queryset
+        # 検索：企業名 or コード（部分一致）
+        query = self.request.query_params.get('search', '').strip()
+        if query:
+            queryset = queryset.filter(
+                Q(code__icontains=query) | Q(name__icontains=query)
+            )
+
+        # ソート：配当 or コード
+        sort = self.request.query_params.get('sort', 'code')
+        if sort == 'dividend':
+            queryset = queryset.order_by('-dividend', 'code')
+        else:
+            queryset = queryset.order_by('code')
+
+        return queryset
+        # """最適プリロード"""
+        # if self.action == 'list':
+        #     # 一覧：Informationのみ（高速）
+        #     return Company.objects.select_related('information').order_by('code')
+        #
+        # # 詳細：Information + 全Financial（年度降順）
+        # return Company.objects.select_related('information').prefetch_related(
+        #     Prefetch(
+        #         'financials',
+        #         queryset=Financial.objects.order_by('-fiscal_year')
+        #     )
+        # )
 
     def get_serializer_context(self):
         """クエリパラメータ伝播"""
