@@ -8,7 +8,7 @@ const apiUrlHousehold = `${apiUrl}api_irbank/companies/`;
 
 //API
 // Get
-export const fetchCompanies = createAsyncThunk("irbank/get", async () => {
+export const fetchAsyncCompanies = createAsyncThunk("irbank/get", async () => {
   try {
     const res = await axios.get(apiUrlHousehold, {
       headers: {
@@ -65,7 +65,7 @@ export const irbankSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchCompanies.fulfilled, (state, action) => {
+    builder.addCase(fetchAsyncCompanies.fulfilled, (state, action) => {
       return {
         ...state,
         companies: action.payload,
@@ -86,7 +86,7 @@ export const selectIsLoadingHousehold = (state: RootState) =>
   state.irbank.isLoadingIrbank;
 export const selectOpenHousehold = (state: RootState) =>
   state.irbank.openIrbank;
-export const selectTransactions = (state: RootState) =>
+export const selectCompanise = (state: RootState) =>
   state.irbank.companies;
 
 //export householdReducer
