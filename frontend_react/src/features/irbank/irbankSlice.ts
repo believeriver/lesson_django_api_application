@@ -31,14 +31,22 @@ export const irbankSlice = createSlice({
   initialState: {
     isLoadingIrbank: false,
     openIrbank: false,
-    transactions: [
+    companies: [
       {
-        id: 0,
-        amount: 0,
-        type: "",
-        date: "",
-        category: "",
-        content: "",
+        code: "",
+        name: "",
+        stock: "",
+        dividend: "",
+        dividend_rank: "",
+        dividend_update: "",
+        information: {
+          industry: "",
+          description: "",
+          per: "",
+          psr: "",
+          pbr: "",
+          updated_at: "",
+        },
       },
     ],
   },
@@ -60,7 +68,7 @@ export const irbankSlice = createSlice({
     builder.addCase(fetchCompanies.fulfilled, (state, action) => {
       return {
         ...state,
-        transactions: action.payload,
+        companies: action.payload,
       };
     });
   },
@@ -75,11 +83,11 @@ export const {
 
 //export state for useSelector
 export const selectIsLoadingHousehold = (state: RootState) =>
-  state.household.isLoadingHousehold;
+  state.irbank.isLoadingIrbank;
 export const selectOpenHousehold = (state: RootState) =>
-  state.household.openHousehold;
+  state.irbank.openIrbank;
 export const selectTransactions = (state: RootState) =>
-  state.household.transactions;
+  state.irbank.companies;
 
 //export householdReducer
 export default irbankSlice.reducer;
