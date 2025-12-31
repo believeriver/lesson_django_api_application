@@ -1,32 +1,33 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
-import type { RootState } from '../../app/store';
+import type { RootState } from "../../app/store";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 const apiUrlHousehold = `${apiUrl}api_irbank/companies/`;
 
 //API
 // Get
-export const fetchCompanies = createAsyncThunk(
-  'irbank/get',
-  async () => {
-    try {
-      const res = await axios.get(apiUrlHousehold, {
-        headers: {
-          Authorization: `JWT ${localStorage.localJWT}`,
-        },
-      });
-      return res.data;
-    } catch (err: any) {
-      console.log('[ERROR]: fetchCompanies: ', err.message);
+export const fetchCompanies = createAsyncThunk("irbank/get", async () => {
+  try {
+    const res = await axios.get(apiUrlHousehold, {
+      headers: {
+        Authorization: `JWT ${localStorage.localJWT}`,
+      },
+    });
+    return res.data;
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      console.log("[ERROR]: fetchCompanies: ", err.message);
+    } else {
+      console.log("[ERROR]: fetchCompanies: ", err);
     }
   }
-);
+});
 
 // main(createSlice) ----
 export const irbankSlice = createSlice({
-  name: 'irbank',
+  name: "irbank",
   initialState: {
     isLoadingIrbank: false,
     openIrbank: false,
@@ -34,10 +35,10 @@ export const irbankSlice = createSlice({
       {
         id: 0,
         amount: 0,
-        type: '',
-        date: '',
-        category: '',
-        content: '',
+        type: "",
+        date: "",
+        category: "",
+        content: "",
       },
     ],
   },
@@ -56,15 +57,12 @@ export const irbankSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(
-      fetchCompanies.fulfilled,
-      (state, action) => {
-        return {
-          ...state,
-          transactions: action.payload,
-        };
-      }
-    );
+    builder.addCase(fetchCompanies.fulfilled, (state, action) => {
+      return {
+        ...state,
+        transactions: action.payload,
+      };
+    });
   },
 });
 
@@ -85,4 +83,3 @@ export const selectTransactions = (state: RootState) =>
 
 //export householdReducer
 export default irbankSlice.reducer;
-
