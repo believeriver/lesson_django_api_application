@@ -36,8 +36,8 @@ const IrbankMain: React.FC = () => {
   const sortedCompanies = React.useMemo(() => {
     if (!companies) return [];
     return [...companies].sort((a, b) => {
-      const aValue = a[orderBy];
-      const bValue = b[orderBy];
+      const aValue = a[orderBy as keyof typeof a];
+      const bValue = b[orderBy as keyof typeof b];
       return order === "asc" ? aValue - bValue : bValue - aValue;
     });
   }, [companies, order, orderBy]);
