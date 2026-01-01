@@ -11,9 +11,9 @@ const apiUrlHousehold = `${apiUrl}api_irbank/companies/`;
 export const fetchAsyncCompanies = createAsyncThunk("irbank/get", async () => {
   try {
     const res = await axios.get(apiUrlHousehold, {
-      headers: {
-        Authorization: `JWT ${localStorage.localJWT}`,
-      },
+      // headers: {
+      //   Authorization: `JWT ${localStorage.localJWT}`,
+      // },
     });
     return res.data;
   } catch (err: unknown) {

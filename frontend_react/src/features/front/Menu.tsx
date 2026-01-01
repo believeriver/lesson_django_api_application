@@ -6,6 +6,7 @@ const apps = [
   { path: '/', label: 'ホーム' },
   { path: '/insta_clone', label: 'SNS clone' },
   { path: '/household', label: '家計簿アプリ' },
+  { path: '/irbank', label: 'IRBANKアプリ' },
   // { path: "/user", label: "ユーザー管理" },
   // { path: "/profile", label: "プロフィール編集" },
   // { path: "/settings", label: "設定" },

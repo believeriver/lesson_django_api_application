@@ -16,6 +16,7 @@ import HouseholdMain from './features/household/HouseholdMain.tsx';
 import AppLayout from './features/household/components/layout/AppLayout';
 import Report from './features/household/pages/Report';
 import NoMatch from './features/household/pages/NoMatch';
+import IrbankMain from './features/irbank/IrbankMain.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -26,6 +27,7 @@ createRoot(document.getElementById('root')!).render(
           <Routes>
             <Route path="/" element={<Menu />} />
             <Route path="/insta_clone" element={<App />} />
+            <Route path="/irbank" element={<IrbankMain />} />
             <Route path="/household" element={<AppLayout />}>
               <Route index element={<HouseholdMain />} />
               <Route path="/household/report" element={<Report />} />
