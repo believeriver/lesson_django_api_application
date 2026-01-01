@@ -72,6 +72,12 @@ const IrbankMain: React.FC = () => {
                 </TableSortLabel>
               </TableCell>
               <TableCell align="right">配当ランク</TableCell>
+              <TableCell>業種</TableCell>
+              <TableCell>説明</TableCell>
+              <TableCell align="right">PER</TableCell>
+              <TableCell align="right">PBR</TableCell>
+              <TableCell align="right">PSR</TableCell>
+              <TableCell>更新日時</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -82,6 +88,17 @@ const IrbankMain: React.FC = () => {
                 <TableCell align="right">{company.stock}</TableCell>
                 <TableCell align="right">{company.dividend}</TableCell>
                 <TableCell align="right">{company.dividend_rank}</TableCell>
+
+                {/* information 内の項目 */}
+                <TableCell>{company.information?.industry}</TableCell>
+                <TableCell>{company.information?.description}</TableCell>
+                <TableCell align="right">{company.information?.per}</TableCell>
+                <TableCell align="right">{company.information?.pbr}</TableCell>
+                <TableCell align="right">{company.information?.psr}</TableCell>
+                <TableCell>
+                  {company.information?.updated_at &&
+                    new Date(company.information.updated_at).toLocaleString()}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
