@@ -3,6 +3,7 @@ venv
 lesson
 db.sqlite3
 bak/
+secrets/
 config/__pycache__
 api/__pycache__
 api_auth/__pycache__
