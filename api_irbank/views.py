@@ -106,7 +106,8 @@ def stock_price(request, ticker: int):
     """
     today = datetime.date.today()
     # デフォルト: 今日から 1 年前
-    default_start_date = today - datetime.timedelta(days=365)
+    # default_start_date = today - datetime.timedelta(days=365)
+    default_start_date = today - datetime.timedelta(days=180)
     default_start = default_start_date.isoformat()  # 'YYYY-MM-DD'
 
     # クエリパラメータ start があればそれを使い、無ければ default_start
