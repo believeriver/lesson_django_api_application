@@ -1,3 +1,7 @@
+import os
+import sys
+import datetime
+
 from django.db.models import Prefetch, Q
 from django.http import Http404
 
@@ -6,11 +10,20 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
+
 
 from django_filters.rest_framework import DjangoFilterBackend
 
+my_path = os.path.dirname(os.path.abspath(__file__))
+print(f"プロジェクトルート: {my_path}")
+# sys.path.append(my_path)
+sys.path.insert(0, my_path)
+
 from .models import Company, Financial
 from .serializers import CompanyListSerializer, CompanyDetailSerializer
+from management.fetch_japanese_stock_from_finance_api import fetch_stock_dataframe
 
 
 class CompanyViewSet(viewsets.ReadOnlyModelViewSet):
@@ -81,4 +94,29 @@ class CompanyViewSet(viewsets.ReadOnlyModelViewSet):
 
         serializer = CompanyListSerializer(companies, many=True)
         return Response(serializer.data)
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def stock_price(request, ticker: int):
+    """
+    例:
+      /api_irbank/stock/7203/                       -> start は「今日から1年前」
+      /api_irbank/stock/7203/?start=2020-01-01     -> 指定された start を優先
+    """
+    today = datetime.date.today()
+    # デフォルト: 今日から 1 年前
+    default_start_date = today - datetime.timedelta(days=365)
+    default_start = default_start_date.isoformat()  # 'YYYY-MM-DD'
+
+    # クエリパラメータ start があればそれを使い、無ければ default_start
+    start = request.query_params.get('start', default_start)
+
+    end = today.isoformat()
+    span = 365
+
+    df = fetch_stock_dataframe(ticker, start, end, span)
+    data = df.to_dict(orient='records')
+
+    return Response(data)
 
